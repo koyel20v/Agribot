@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgriGenius – Alerts & Warnings</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green-dark:   #1a3a2a;
+    --green-mid:    #2d6a4f;
+    --green-bright: #52b788;
+    --green-light:  #b7e4c7;
+    --green-pale:   #d8f3dc;
+    --red:          #e63946;
+    --orange:       #f4a261;
+    --yellow:       #e9c46a;
+    --blue:         #4361ee;
+    --purple:       #7209b7;
+    --cream:        #fdfdf5;
+    --white:        #ffffff;
+    --text:         #1a2e1e;
+    --text-muted:   #4a6555;
+    --border:       rgba(82,183,136,.2);
+    --shadow:       0 4px 24px rgba(26,58,42,.1);
+    --radius:       16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #f0f4f1; color: var(--text); min-height: 100vh; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--green-dark); color: #fff;
+    padding: 16px 36px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px rgba(0,0,0,.2);
+  }
+  .topbar-logo { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 900; display: flex; align-items: center; gap: 10px; }
+  .topbar-logo span { color: var(--green-bright); }
+  .topbar-nav { display: flex; gap: 8px; }
+  .topbar-nav a {
+    color: rgba(255,255,255,.7); text-decoration: none; font-size: .86rem; padding: 7px 16px;
+    border-radius: 50px; transition: all .2s;
+  }
+  .topbar-nav a:hover, .topbar-nav a.active { background: rgba(255,255,255,.12); color: #fff; }
+
+  /* ── HERO ── */
+  .alerts-hero {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+    padding: 48px 36px 36px; color: #fff; position: relative; overflow: hidden;
+    text-align: center; display: flex; flex-direction: column; align-items: center;
+  }
+  .alerts-hero::after {
+    content: '🚨'; position: absolute; right: 80px; top: 50%; transform: translateY(-50%);
+    font-size: 8rem; opacity: .07;
+  }
+  .alerts-hero h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; margin-bottom: 8px; }
+  .alerts-hero p { color: rgba(255,255,255,.7); font-size: 1rem; margin-bottom: 24px; }
+
+  /* ── LIVE TICKER ── */
+  .ticker {
+    background: rgba(255,255,255,.1); border-radius: 50px; padding: 10px 20px;
+    display: flex; align-items: center; gap: 12px; overflow: hidden;
+    max-width: 700px; width: 100%;
+  }
+  .ticker-label {
+    background: var(--red); color: #fff; font-size: .72rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 50px; flex-shrink: 0; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .ticker-text { font-size: .88rem; color: rgba(255,255,255,.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @keyframes tickerMove { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+  .ticker-inner { animation: tickerMove 18s linear infinite; display: inline-block; }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 36px 24px; }
+
+  /* ══════════════════════════════════════════════
+     LIVE ALERT LOOKUP PANEL
+  ══════════════════════════════════════════════ */
+  .live-panel {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--green-bright);
+    position: relative;
+    overflow: hidden;
+  }
+  .live-panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--green-bright), var(--green-mid));
+  }
+  .live-panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700; color: var(--green-dark);
+    margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+  }
+  .live-badge {
+    background: var(--red); color: #fff; font-size: .65rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 50px; text-transform: uppercase; letter-spacing: .05em;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .live-panel-sub { font-size: .85rem; color: var(--text-muted); margin-bottom: 20px; }
+
+  /* Auto-refresh bar */
+  .refresh-bar {
+    display: none; align-items: center; gap: 10px; margin-top: 10px;
+    font-size: .78rem; color: var(--text-muted);
+  }
+  .refresh-bar.visible { display: flex; }
+  .refresh-progress {
+    flex: 1; height: 4px; background: var(--green-pale); border-radius: 2px; overflow: hidden;
+  }
+  .refresh-fill {
+    height: 100%; background: var(--green-bright); border-radius: 2px;
+    transition: width 1s linear;
+  }
+
+  .live-form { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .live-field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 180px; }
+  .live-field label { font-size: .75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+  .live-field input, .live-field select {
+    padding: 11px 16px; border-radius: 10px; border: 1.5px solid var(--border);
+    font-family: 'DM Sans', sans-serif; font-size: .9rem; color: var(--text);
+    background: var(--cream); outline: none; transition: border-color .2s;
+  }
+  .live-field input:focus, .live-field select:focus { border-color: var(--green-bright); }
+  .btn-live {
+    background: var(--green-mid); color: #fff; border: none;
+    padding: 11px 28px; border-radius: 50px; font-size: .9rem; font-weight: 700;
+    cursor: pointer; transition: all .2s; font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+  .btn-live:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .btn-live:disabled { background: #aaa; cursor: not-allowed; transform: none; }
+
+  /* Weather summary widget */
+  .weather-widget {
+    display: none; margin-top: 20px;
+    background: linear-gradient(135deg, rgba(82,183,136,.08), rgba(45,106,79,.05));
+    border: 1px solid var(--green-light); border-radius: 12px; padding: 16px 20px;
+  }
+  .weather-widget.visible { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .ww-title { font-size: .8rem; font-weight: 700; color: var(--green-mid); text-transform: uppercase; letter-spacing: .06em; width: 100%; margin-bottom: 12px; }
+  .ww-stat { flex: 1; min-width: 80px; text-align: center; padding: 0 10px; border-right: 1px solid var(--border); }
+  .ww-stat:last-child { border-right: none; }
+  .ww-val { font-size: 1.2rem; font-weight: 700; color: var(--green-dark); }
+  .ww-lbl { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* Loading spinner */
+  .live-spinner {
+    display: none; align-items: center; gap: 10px;
+    margin-top: 18px; font-size: .88rem; color: var(--text-muted);
+  }
+  .live-spinner.visible { display: flex; }
+  @keyframes spinRot { to { transform: rotate(360deg); } }
+  .spinner-dot { display: inline-block; animation: spinRot .7s linear infinite; font-size: 1.1rem; }
+
+  /* Error box */
+  .live-error {
+    display: none; margin-top: 14px; padding: 12px 16px; border-radius: 10px;
+    background: #fde8ea; color: #c0392b; font-size: .88rem; border: 1px solid #f5c6cb;
+  }
+  .live-error.visible { display: block; }
+
+  /* Results section */
+  .live-results { display: none; margin-top: 20px; }
+  .live-results.visible { display: block; }
+  .live-result-title {
+    font-size: .92rem; font-weight: 700; color: var(--green-dark);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+
+  /* No alerts UI */
+  .no-live-alerts {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 32px 20px; text-align: center;
+    background: var(--green-pale); border-radius: 12px; border: 1px dashed var(--green-light);
+  }
+  .no-live-alerts .e-icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .no-live-alerts h3 { color: var(--green-mid); font-size: 1rem; margin-bottom: 6px; }
+  .no-live-alerts p { color: var(--text-muted); font-size: .85rem; }
+
+  /* ── Live alert cards — colour-coded by severity ── */
+  .live-alert-card {
+    display: flex; align-items: flex-start; gap: 14px;
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+    border: 1px solid transparent; transition: transform .15s;
+    position: relative; overflow: hidden;
+  }
+  .live-alert-card:hover { transform: translateX(2px); }
+  .live-alert-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  /* Red → High */
+  .live-alert-card.sev-high   { background: #fff0f0; border-color: #fbc4c4; }
+  .live-alert-card.sev-high::before   { background: var(--red); }
+  /* Orange → Medium */
+  .live-alert-card.sev-medium { background: #fff8ee; border-color: #fddcaa; }
+  .live-alert-card.sev-medium::before { background: var(--orange); }
+  /* Yellow → Low */
+  .live-alert-card.sev-low    { background: #fffff0; border-color: #f0e8a0; }
+  .live-alert-card.sev-low::before    { background: var(--yellow); }
+
+  .live-alert-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+  .live-alert-body { flex: 1; }
+  .live-alert-top  { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .live-alert-crop {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    padding: 2px 10px; border-radius: 50px; background: var(--green-pale); color: var(--green-mid);
+  }
+  .live-alert-risk { font-size: .85rem; font-weight: 700; color: var(--text); }
+  .live-alert-sev-badge {
+    font-size: .7rem; font-weight: 700; padding: 2px 10px; border-radius: 50px;
+    text-transform: uppercase; letter-spacing: .04em; margin-left: auto;
+  }
+  /* Severity badge colours */
+  .sev-high   .live-alert-sev-badge { background: #fde8ea; color: #c0392b; border: 1px solid #fbc4c4; }
+  .sev-medium .live-alert-sev-badge { background: #fff3e0; color: #e65100; border: 1px solid #fddcaa; }
+  .sev-low    .live-alert-sev-badge { background: #fffde7; color: #8d6e00; border: 1px solid #f0e8a0; }
+  .live-alert-msg  { font-size: .88rem; color: var(--text); line-height: 1.6; margin-bottom: 6px; }
+  .live-alert-suggestion {
+    font-size: .83rem; color: var(--green-mid); background: var(--green-pale);
+    border-radius: 8px; padding: 8px 12px; line-height: 1.5;
+  }
+  .live-alert-suggestion::before { content: '💡 '; }
+
+  /* ── Summary Strip ── */
+  .summary-strip {
+    display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .sum-box {
+    flex: 1; min-width: 140px; background: var(--white); border-radius: 14px;
+    padding: 18px 20px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 14px;
+  }
+  .sum-icon { font-size: 1.6rem; }
+  .sum-val  { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+  .sum-lbl  { font-size: .75rem; color: var(--text-muted); margin-top: 3px; }
+  .sum-red    { color: var(--red);    }
+  .sum-orange { color: var(--orange); }
+  .sum-blue   { color: var(--blue);   }
+  .sum-green  { color: var(--green-mid); }
+
+  /* ── Filters ── */
+  .filters-section {
+    background: var(--white); border-radius: var(--radius); padding: 20px 24px;
+    box-shadow: var(--shadow); margin-bottom: 24px;
+  }
+  .filters-title { font-size: .85rem; font-weight: 700; color: var(--green-dark); margin-bottom: 14px; }
+  .filter-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 150px; }
+  .filter-group label { font-size: .75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+  .filter-group select {
+    padding: 9px 14px; border-radius: 10px; border: 1.5px solid var(--border);
+    font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--text);
+    background: var(--cream); outline: none; transition: border-color .2s;
+  }
+  .filter-group select:focus { border-color: var(--green-bright); }
+  .btn-reset {
+    padding: 9px 20px; border-radius: 50px; border: 1.5px solid var(--border);
+    background: none; color: var(--text-muted); font-size: .88rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all .2s;
+  }
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── Category Tabs ── */
+  .cat-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .cat-tab {
+    padding: 8px 18px; border-radius: 50px; border: 1.5px solid var(--border);
+    background: var(--white); font-size: .84rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; color: var(--text-muted); transition: all .2s;
+  }
+  .cat-tab:hover, .cat-tab.active-all, .cat-tab.active-weather,
+  .cat-tab.active-pest, .cat-tab.active-disease, .cat-tab.active-market {
+    background: var(--green-mid); color: #fff; border-color: var(--green-mid);
+  }
+
+  /* ── Alert Cards (static advisory) ── */
+  .alerts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 20px; }
+  .alert-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden; cursor: pointer;
+    transition: transform .2s, box-shadow .2s; border: 1px solid var(--border);
+  }
+  .alert-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(26,58,42,.14); }
+  .alert-card-top { position: relative; }
+  .alert-severity-bar { height: 5px; width: 100%; }
+  .sev-high   .alert-severity-bar { background: var(--red); }
+  .sev-medium .alert-severity-bar { background: var(--orange); }
+  .sev-low    .alert-severity-bar { background: var(--yellow); }
+  .alert-header { display: flex; align-items: center; gap: 14px; padding: 14px 18px 12px; }
+  .alert-icon-wrap { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .icon-weather { background: #e3f2fd; }
+  .icon-pest    { background: #fce4ec; }
+  .icon-disease { background: #f3e5f5; }
+  .icon-market  { background: #e8f5e9; }
+  .alert-title { font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+  .alert-meta  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .severity-badge { font-size: .7rem; font-weight: 700; padding: 2px 10px; border-radius: 50px; text-transform: uppercase; }
+  .badge-high   { background: #fde8ea; color: #c0392b; }
+  .badge-medium { background: #fff3e0; color: #e65100; }
+  .badge-low    { background: #fffde7; color: #8d6e00; }
+  .alert-date   { font-size: .75rem; color: var(--text-muted); }
+  .alert-body   { padding: 0 18px 14px; }
+  .alert-desc   { font-size: .86rem; color: var(--text); line-height: 1.6; margin-bottom: 10px; }
+  .alert-tags   { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tag { font-size: .72rem; padding: 2px 10px; border-radius: 50px; font-weight: 600; }
+  .tag-loc  { background: #e3f2fd; color: #1565c0; }
+  .tag-crop { background: var(--green-pale); color: var(--green-mid); }
+  .alert-action { display: flex; align-items: center; gap: 6px; color: var(--green-mid); font-size: .82rem; font-weight: 700; }
+  .alert-detail { display: none; padding: 14px 18px 18px; border-top: 1px solid var(--border); font-size: .85rem; line-height: 1.7; color: var(--text); background: var(--cream); }
+  .alert-card.expanded .alert-detail { display: block; }
+  .no-alerts { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; padding: 48px 20px; text-align: center; }
+  .no-alerts .e-icon { font-size: 3rem; margin-bottom: 14px; }
+  .no-alerts h3 { font-size: 1.1rem; color: var(--green-dark); margin-bottom: 6px; }
+  .no-alerts p  { color: var(--text-muted); font-size: .9rem; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px; background: var(--green-dark); color: #fff;
+    padding: 12px 20px; border-radius: 12px; font-size: .88rem; font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,.2); transform: translateY(80px); opacity: 0;
+    transition: all .35s; z-index: 999;
+  }
+  .toast.show { transform: none; opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<header class="topbar">
+  <div class="topbar-logo">🌿 Agri<span>Genius</span></div>
+  <nav class="topbar-nav">
+    <a href="farmer.html">🌾 Dashboard</a>
+    <a href="alerts.html" class="active">🔔 Alerts</a>
+    <a href="officer.html">Officer Portal</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<div class="alerts-hero">
+  <h1>🔔 Alerts & Warnings</h1>
+  <p>Stay informed about weather, pest, and disease threats to your crops in real-time.</p>
+  <div class="ticker">
+    <span class="ticker-label">Live</span>
+    <span class="ticker-text"><span class="ticker-inner">🌧️ Heavy rainfall expected in West Bengal districts &nbsp;&nbsp;|&nbsp;&nbsp; 🦗 Brown Plant Hopper alert: Murshidabad & Bardhaman &nbsp;&nbsp;|&nbsp;&nbsp; 🌡️ Heat wave warning for Jharkhand farming zones &nbsp;&nbsp;|&nbsp;&nbsp; 🍃 Blast disease risk high for paddy in humid regions</span></span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ LIVE ALERT LOOKUP PANEL ══ -->
+  <div class="live-panel">
+    <div class="live-panel-title">
+      🌦️ Get Live Weather-Based Alert
+      <span class="live-badge">Real-Time</span>
+    </div>
+    <div class="live-panel-sub">Enter your location and select a crop to instantly get personalised risk alerts based on today's live weather.</div>
+
+    <div class="live-form">
+      <!-- Location input -->
+      <div class="live-field">
+        <label>📍 Your Location</label>
+        <input
+          type="text"
+          id="liveLocation"
+          placeholder="e.g. Durgapur, Kolkata, Patna…"
+          onkeydown="if(event.key==='Enter') fetchLiveAlerts()"
+        />
+      </div>
+
+      <!-- ✅ Crop filter dropdown (NEW) -->
+      <div class="live-field">
+        <label>🌾 Filter by Crop</label>
+        <select id="liveCrop">
+          <option value="">🌱 All Crops</option>
+          <option value="Rice">🌾 Rice / Paddy</option>
+          <option value="Wheat">🌻 Wheat</option>
+          <option value="Maize">🌽 Maize</option>
+          <option value="Cotton">🌿 Cotton</option>
+          <option value="Mustard">🟡 Mustard</option>
+          <option value="All Standing Crops">🪴 All Standing Crops</option>
+        </select>
+      </div>
+
+      <!-- Get Alerts button -->
+      <button class="btn-live" onclick="fetchLiveAlerts()" id="liveBtn">
+        ⚡ Get Alerts
+      </button>
+    </div>
+
+    <!-- Loading spinner -->
+    <div class="live-spinner" id="liveSpinner">
+      <span class="spinner-dot">⟳</span> Fetching live weather data…
+    </div>
+
+    <!-- Error box -->
+    <div class="live-error" id="liveError"></div>
+
+    <!-- Weather widget -->
+    <div class="weather-widget" id="weatherWidget">
+      <div class="ww-title">📡 Current Weather Conditions</div>
+      <div class="ww-stat"><div class="ww-val" id="wwTemp">—</div><div class="ww-lbl">Temp (°C)</div></div>
+      <div class="ww-stat"><div class="ww-val" id="wwHumid">—</div><div class="ww-lbl">Humidity %</div></div>
+      <div class="ww-stat"><div class="ww-val" id="wwWind">—</div><div class="ww-lbl">Wind km/h</div></div>
+      <div class="ww-stat"><div class="ww-val" id="wwRain">—</div><div class="ww-lbl">Rain mm</div></div>
+      <div class="ww-stat"><div class="ww-val" id="wwCond" style="font-size:.95rem;">—</div><div class="ww-lbl">Condition</div></div>
+    </div>
+
+    <!-- Alert results -->
+    <div class="live-results" id="liveResults">
+      <div class="live-result-title">
+        ⚠️ Risk Alerts for
+        <span id="liveResultCrop">All Crops</span>
+        in <span id="liveResultLoc"></span>
+        <span id="fetchedAt" style="font-size:.75rem;font-weight:400;color:var(--text-muted);margin-left:auto;"></span>
+      </div>
+      <div id="liveAlertCards"></div>
+    </div>
+
+    <!-- Auto-refresh progress bar (10-minute countdown) -->
+    <div class="refresh-bar" id="refreshBar">
+      <span>⏱ Auto-refresh in <span id="refreshCountdown">10:00</span></span>
+      <div class="refresh-progress"><div class="refresh-fill" id="refreshFill" style="width:100%"></div></div>
+      <span style="font-size:.75rem;">every 10 min</span>
+    </div>
+  </div>
+  <!-- ══ END LIVE PANEL ══ -->
+
+  <!-- Summary Strip -->
+  <div class="summary-strip">
+    <div class="sum-box"><div class="sum-icon">🔴</div><div><div class="sum-val sum-red"    id="highCount">0</div><div class="sum-lbl">High Severity</div></div></div>
+    <div class="sum-box"><div class="sum-icon">🟠</div><div><div class="sum-val sum-orange" id="medCount">0</div><div class="sum-lbl">Medium Severity</div></div></div>
+    <div class="sum-box"><div class="sum-icon">🔵</div><div><div class="sum-val sum-blue"   id="lowCount">0</div><div class="sum-lbl">Low / Advisory</div></div></div>
+    <div class="sum-box"><div class="sum-icon">📋</div><div><div class="sum-val sum-green"  id="totalAlerts">0</div><div class="sum-lbl">Total Alerts</div></div></div>
+  </div>
+
+  <!-- Filters (static advisory section) -->
+  <div class="filters-section">
+    <div class="filters-title">🔎 Filter Advisory Alerts</div>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>Crop Type</label>
+        <select id="cropFilter" onchange="applyFilters()">
+          <option value="">All Crops</option>
+          <option value="rice">🌾 Rice / Paddy</option>
+          <option value="wheat">🌻 Wheat</option>
+          <option value="jute">🪴 Jute</option>
+          <option value="tomato">🍅 Tomato</option>
+          <option value="potato">🥔 Potato</option>
+          <option value="maize">🌽 Maize</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Location</label>
+        <select id="locFilter" onchange="applyFilters()">
+          <option value="">All Locations</option>
+          <option value="west bengal">West Bengal</option>
+          <option value="bihar">Bihar</option>
+          <option value="jharkhand">Jharkhand</option>
+          <option value="odisha">Odisha</option>
+          <option value="punjab">Punjab</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Severity</label>
+        <select id="sevFilter" onchange="applyFilters()">
+          <option value="">All Severity</option>
+          <option value="high">🔴 High</option>
+          <option value="medium">🟠 Medium</option>
+          <option value="low">🔵 Low</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetFilters()">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="cat-tabs">
+    <button class="cat-tab active-all" onclick="setCat('all', this)">📋 All Alerts</button>
+    <button class="cat-tab" onclick="setCat('weather', this)">🌦️ Weather</button>
+    <button class="cat-tab" onclick="setCat('pest', this)">🦗 Pest</button>
+    <button class="cat-tab" onclick="setCat('disease', this)">🦠 Disease</button>
+    <button class="cat-tab" onclick="setCat('market', this)">📊 Market</button>
+  </div>
+
+  <!-- Alerts Grid (static advisory data) -->
+  <div class="alerts-grid" id="alertsGrid"></div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   CONFIGURATION
+══════════════════════════════════════════════════════ */
+const API_BASE        = 'http://localhost:8000'; // change to deployed URL
+const REFRESH_SECONDS = 600;                     // 10 minutes
+
+/* ══════════════════════════════════════════════════════
+   AUTO-REFRESH STATE
+══════════════════════════════════════════════════════ */
+let autoRefreshTimer  = null;
+let countdownInterval = null;
+
+/* ══════════════════════════════════════════════════════
+   LIVE ALERT FETCH
+   GET /alerts?location=<city>&crop=<optional>
+══════════════════════════════════════════════════════ */
+async function fetchLiveAlerts() {
+  const location = document.getElementById('liveLocation').value.trim();
+  const crop     = document.getElementById('liveCrop').value;        // "Rice" | ""
+  const btn      = document.getElementById('liveBtn');
+
+  if (!location) {
+    showLiveError('Please enter your location (e.g. Durgapur, Kolkata).');
+    return;
+  }
+
+  // UI: loading state
+  btn.disabled    = true;
+  btn.textContent = '⟳ Fetching…';
+  hideLiveResults();
+  showSpinner(true);
+  hideLiveError();
+
+  try {
+    // Build URL — append crop param only when a specific crop is selected
+    let url = `${API_BASE}/alerts?location=${encodeURIComponent(location)}`;
+    if (crop && crop !== '') {
+      url += `&crop=${encodeURIComponent(crop)}`;
+    }
+
+    // Include JWT token from localStorage (set by farmer.html login)
+    const token   = localStorage.getItem('agri_token') || '';
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+    const response = await fetch(url, { headers });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        showLiveError('⚠️ Session expired. Please log in again from the Dashboard.');
+        return;
+      }
+      throw new Error(errData.detail || `Server error (${response.status})`);
+    }
+
+    const data = await response.json();
+
+    // ── Render weather widget ──────────────────────────────────────
+    renderWeatherWidget(data.weather);
+
+    // ── Render alert cards ────────────────────────────────────────
+    renderLiveAlerts(data, crop);
+
+    // ── Start auto-refresh countdown ──────────────────────────────
+    startAutoRefresh(location, crop);
+
+    showToast(`✅ Alerts loaded for ${data.location?.name || location}`);
+
+  } catch (err) {
+    showLiveError('⚠️ ' + (err.message || 'Could not fetch alerts. Is the backend running on port 8000?'));
+    stopAutoRefresh();
+  } finally {
+    showSpinner(false);
+    btn.disabled    = false;
+    btn.textContent = '⚡ Get Alerts';
+  }
+}
+
+/* ── Render weather stats into the weather widget ─── */
+function renderWeatherWidget(w) {
+  if (!w) return;
+  document.getElementById('wwTemp').textContent  = (w.temperature_c  ?? w.temp_c    ?? '—');
+  document.getElementById('wwHumid').textContent = (w.humidity_pct   ?? w.humidity   ?? '—') + '%';
+  document.getElementById('wwWind').textContent  = (w.wind_kmh       ?? w.wind_kph   ?? '—');
+  document.getElementById('wwRain').textContent  = (w.rainfall_mm    ?? w.rain_mm    ?? '—') + ' mm';
+  document.getElementById('wwCond').textContent  = w.condition       ?? '—';
+  document.getElementById('weatherWidget').classList.add('visible');
+}
+
+/* ── Render live alert cards ── */
+function renderLiveAlerts(data, selectedCrop) {
+  const locObj   = data.location;
+  const locStr   = locObj
+    ? `${locObj.name}${locObj.country ? ', ' + locObj.country : ''}`
+    : document.getElementById('liveLocation').value;
+
+  const cropLabel = selectedCrop || 'All Crops';
+  document.getElementById('liveResultCrop').textContent = cropLabel;
+  document.getElementById('liveResultLoc').textContent  = locStr;
+  document.getElementById('fetchedAt').textContent      = data.fetched_at ? '🕐 ' + data.fetched_at : '';
+
+  const alerts    = data.alerts || [];
+  const container = document.getElementById('liveAlertCards');
+
+  // ── "No Alerts" UI ─────────────────────────────────────────────
+  // Show when: empty array, OR only the "No Immediate Risk" fallback
+  // exists AND a specific crop was requested
+  const isNoRisk = alerts.length === 1 && alerts[0].risk === 'No Immediate Risk';
+  const hasSpecificCrop = selectedCrop && selectedCrop !== '';
+
+  if (alerts.length === 0 || (isNoRisk && hasSpecificCrop)) {
+    container.innerHTML = `
+      <div class="no-live-alerts">
+        <div class="e-icon">🌿</div>
+        <h3>No alerts for ${escHtml(cropLabel)} in ${escHtml(locStr)}</h3>
+        <p>Weather conditions look favourable for this crop. Continue regular field monitoring and maintenance.</p>
+      </div>`;
+  } else {
+    // Severity label map for the badge
+    const sevLabels = { high: '🔴 High Risk', medium: '🟠 Medium Risk', low: '🟢 Low Risk' };
+
+    container.innerHTML = alerts.map(alert => `
+      <div class="live-alert-card sev-${escHtml(alert.severity || 'low')}">
+        <div class="live-alert-icon">${alert.icon || (alert.severity === 'high' ? '🔴' : alert.severity === 'medium' ? '🟠' : '✅')}</div>
+        <div class="live-alert-body">
+          <div class="live-alert-top">
+            <span class="live-alert-crop">${escHtml(alert.crop || 'General')}</span>
+            <span class="live-alert-risk">${escHtml(alert.risk || '')}</span>
+            <span class="live-alert-sev-badge">${sevLabels[alert.severity] || alert.severity || 'low'}</span>
+          </div>
+          <div class="live-alert-msg">${escHtml(alert.alert || alert.message || '')}</div>
+          ${alert.suggestion
+            ? `<div class="live-alert-suggestion">${escHtml(alert.suggestion)}</div>`
+            : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('liveResults').classList.add('visible');
+}
+
+/* ══════════════════════════════════════════════════════
+   AUTO-REFRESH (every 10 minutes)
+══════════════════════════════════════════════════════ */
+function startAutoRefresh(location, crop) {
+  stopAutoRefresh();
+
+  const bar  = document.getElementById('refreshBar');
+  const fill = document.getElementById('refreshFill');
+  const cd   = document.getElementById('refreshCountdown');
+  bar.classList.add('visible');
+
+  let remaining = REFRESH_SECONDS;
+  fill.style.width = '100%';
+
+  countdownInterval = setInterval(() => {
+    remaining--;
+    const pct = (remaining / REFRESH_SECONDS) * 100;
+    fill.style.width = pct + '%';
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    cd.textContent = `${m}:${String(s).padStart(2, '0')}`;
+    if (remaining <= 0) clearInterval(countdownInterval);
+  }, 1000);
+
+  autoRefreshTimer = setTimeout(() => fetchLiveAlerts(), REFRESH_SECONDS * 1000);
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshTimer)  { clearTimeout(autoRefreshTimer);   autoRefreshTimer  = null; }
+  if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+  document.getElementById('refreshBar').classList.remove('visible');
+}
+
+/* ══════════════════════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════════════════════ */
+function showSpinner(show)  { document.getElementById('liveSpinner').classList.toggle('visible', show); }
+function showLiveError(msg) { const el = document.getElementById('liveError'); el.textContent = msg; el.classList.add('visible'); }
+function hideLiveError()    { document.getElementById('liveError').classList.remove('visible'); }
+function hideLiveResults()  {
+  document.getElementById('liveResults').classList.remove('visible');
+  document.getElementById('weatherWidget').classList.remove('visible');
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+/* ══════════════════════════════════════════════════════
+   AUTO-TRIGGER on page load if farmer location stored
+══════════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  const savedLocation = localStorage.getItem('agrigenius_location');
+  const savedCrop     = localStorage.getItem('agrigenius_primary_crop');
+
+  if (savedLocation) {
+    document.getElementById('liveLocation').value = savedLocation;
+  }
+
+  if (savedCrop) {
+    // Map stored crop key to dropdown option value
+    const cropMap = {
+      rice: 'Rice', wheat: 'Wheat', maize: 'Maize',
+      cotton: 'Cotton', mustard: 'Mustard'
+    };
+    const mapped = cropMap[savedCrop.toLowerCase()] || '';
+    if (mapped) document.getElementById('liveCrop').value = mapped;
+  }
+
+  // Auto-fetch if location is available
+  if (savedLocation) fetchLiveAlerts();
+});
+
+/* ══════════════════════════════════════════════════════
+   STATIC ADVISORY ALERTS
+══════════════════════════════════════════════════════ */
+const alertsData = [
+  { id:1, type:'weather', severity:'high', title:'Heavy Rainfall Warning', icon:'🌧️', iconCls:'icon-weather', date:'Mar 26, 2025', location:'west bengal', crops:['rice','jute'], tags:['West Bengal','Murshidabad','Rice','Jute'], desc:'Heavy to very heavy rainfall expected in West Bengal for the next 48 hours. Strong winds at 40–60 kmph likely. Farmers should avoid field operations and ensure drainage channels are clear.', detail:'Action Required: (1) Ensure all drainage outlets are clear. (2) Stake and support tall crops like jute and banana. (3) Postpone any pesticide or fertilizer application. (4) Harvest mature crops immediately if possible.', sevCls:'sev-high', badgeCls:'badge-high' },
+  { id:2, type:'pest', severity:'high', title:'Brown Plant Hopper Alert', icon:'🦗', iconCls:'icon-pest', date:'Mar 25, 2025', location:'west bengal', crops:['rice'], tags:['West Bengal','Bardhaman','Paddy'], desc:'Brown Plant Hopper (BPH) population has reached action threshold levels in Bardhaman and Murshidabad districts. Immediate scouting and control measures are advised.', detail:'Recommended Actions: (1) Apply Buprofezin 25 SC at 1ml/L or Thiamethoxam 25 WG at 0.2g/L. (2) Avoid broad-spectrum insecticides which kill natural enemies. (3) Drain field water for 4–5 days where possible.', sevCls:'sev-high', badgeCls:'badge-high' },
+  { id:3, type:'weather', severity:'medium', title:'Heat Wave Advisory', icon:'🌡️', iconCls:'icon-weather', date:'Mar 26, 2025', location:'jharkhand', crops:['wheat','tomato'], tags:['Jharkhand','Ranchi','Wheat','Tomato'], desc:'Maximum temperatures expected to reach 42–44°C in Jharkhand and neighboring areas over the next 3 days. Wheat near maturity may experience forced ripening.', detail:'Recommended Actions: (1) Irrigate wheat fields in the evening to reduce heat stress. (2) Apply mulch around tomato crops to conserve soil moisture. (3) Harvest wheat that has reached 80% maturity immediately.', sevCls:'sev-medium', badgeCls:'badge-medium' },
+  { id:4, type:'disease', severity:'high', title:'Blast Disease Risk — Paddy', icon:'🍃', iconCls:'icon-disease', date:'Mar 24, 2025', location:'west bengal', crops:['rice'], tags:['West Bengal','High Humidity','Paddy'], desc:'Blast disease risk is HIGH for paddy in areas with high humidity and temperatures between 25–30°C.', detail:'Preventive Measures: (1) Apply Tricyclazole 75 WP at 0.6g/L or Isoprothiolane 40 EC at 1.5ml/L. (2) Reduce Nitrogen application. (3) Ensure proper plant spacing for air circulation.', sevCls:'sev-high', badgeCls:'badge-high' },
+  { id:5, type:'pest', severity:'medium', title:'Fall Armyworm in Maize', icon:'🐛', iconCls:'icon-pest', date:'Mar 23, 2025', location:'bihar', crops:['maize'], tags:['Bihar','Muzaffarpur','Maize'], desc:'Fall Armyworm (FAW) detected in maize-growing districts of Bihar. Larvae cause whorl damage and yield loss if not controlled early.', detail:'Control Strategy: (1) Scout whorls for frass and feeding damage. (2) Apply Spinetoram 11.7 SC at 0.5ml/L targeting the whorl. (3) Release Trichogramma pretiosum at 50,000/acre biologically.', sevCls:'sev-medium', badgeCls:'badge-medium' },
+  { id:6, type:'weather', severity:'low', title:'Cyclone Watch — Bay of Bengal', icon:'🌀', iconCls:'icon-weather', date:'Mar 26, 2025', location:'odisha', crops:['rice','jute'], tags:['Odisha','Coastal Areas','All Crops'], desc:'A low pressure system in the Bay of Bengal may intensify into a cyclonic storm in 72–96 hours. Coastal districts of Odisha and West Bengal should stay alert.', detail:'Precautionary Measures: (1) Monitor IMD weather bulletins every 6 hours. (2) Harvest mature crops immediately. (3) Secure farm structures. Disaster helpline: 1800-345-6789.', sevCls:'sev-low', badgeCls:'badge-low' },
+  { id:7, type:'disease', severity:'medium', title:'Late Blight Risk — Potato', icon:'🥔', iconCls:'icon-disease', date:'Mar 22, 2025', location:'west bengal', crops:['potato'], tags:['West Bengal','Hooghly','Potato'], desc:'Weather conditions are favorable for Late Blight (Phytophthora infestans) development in potato growing areas of Hooghly and Nadia districts.', detail:'Management: (1) Apply Cymoxanil+Mancozeb 2.5g/L as protective spray. (2) Remove and destroy infected leaves. (3) Improve drainage and avoid excess moisture.', sevCls:'sev-medium', badgeCls:'badge-medium' },
+  { id:8, type:'market', severity:'low', title:'MSP Update: Rabi 2024–25', icon:'📊', iconCls:'icon-market', date:'Mar 20, 2025', location:'punjab', crops:['wheat'], tags:['All India','Wheat','MSP'], desc:'Government has announced MSP for Rabi crops 2024–25. Wheat MSP set at ₹2,275/quintal, up by ₹150 from last year.', detail:'Key MSP Rates: Wheat — ₹2,275/qtl | Barley — ₹1,635/qtl | Gram — ₹5,440/qtl | Mustard — ₹5,650/qtl. Register at enam.gov.in or call 1800-270-0224.', sevCls:'sev-low', badgeCls:'badge-low' },
+];
+
+let activeCat = 'all', cropFilter = '', locFilter = '', sevFilter = '';
+
+function setCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(b => b.className = 'cat-tab');
+  btn.classList.add('active-' + cat);
+  renderAlerts();
+}
+
+function applyFilters() {
+  cropFilter = document.getElementById('cropFilter').value;
+  locFilter  = document.getElementById('locFilter').value;
+  sevFilter  = document.getElementById('sevFilter').value;
+  renderAlerts();
+}
+
+function resetFilters() {
+  ['cropFilter','locFilter','sevFilter'].forEach(id => document.getElementById(id).value = '');
+  cropFilter = locFilter = sevFilter = '';
+  renderAlerts();
+}
+
+function toggleCard(id) {
+  document.getElementById('acard-' + id).classList.toggle('expanded');
+}
+
+function renderAlerts() {
+  let filtered = alertsData.filter(a => {
+    if (activeCat !== 'all' && a.type !== activeCat) return false;
+    if (cropFilter && !a.crops.includes(cropFilter))  return false;
+    if (locFilter  && !a.location.includes(locFilter)) return false;
+    if (sevFilter  && a.severity !== sevFilter)        return false;
+    return true;
+  });
+
+  document.getElementById('highCount').textContent   = alertsData.filter(a => a.severity === 'high').length;
+  document.getElementById('medCount').textContent    = alertsData.filter(a => a.severity === 'medium').length;
+  document.getElementById('lowCount').textContent    = alertsData.filter(a => a.severity === 'low').length;
+  document.getElementById('totalAlerts').textContent = alertsData.length;
+
+  const grid = document.getElementById('alertsGrid');
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="no-alerts"><span class="e-icon">🔕</span><h3>No alerts match your filters.</h3><p>Try removing some filters to see more alerts.</p></div>';
+    return;
+  }
+
+  const locTags = ['West Bengal','Bihar','Jharkhand','Odisha','Punjab','All India','Coastal Areas',
+                   'Hooghly','Bardhaman','Murshidabad','Ranchi','Patna','Muzaffarpur','High Humidity'];
+
+  grid.innerHTML = filtered.map(a => `
+    <div class="alert-card ${a.sevCls}" id="acard-${a.id}">
+      <div class="alert-card-top">
+        <div class="alert-severity-bar"></div>
+        <div class="alert-header">
+          <div class="alert-icon-wrap ${a.iconCls}">${a.icon}</div>
+          <div>
+            <div class="alert-title">${a.title}</div>
+            <div class="alert-meta">
+              <span class="severity-badge ${a.badgeCls}">${a.severity}</span>
+              <span class="alert-date">📅 ${a.date}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="alert-body">
+        <div class="alert-desc">${a.desc}</div>
+        <div class="alert-tags">${a.tags.map(t => `<span class="tag ${locTags.includes(t) ? 'tag-loc' : 'tag-crop'}">${t}</span>`).join('')}</div>
+        <div class="alert-action" onclick="toggleCard(${a.id})"><span>📋</span><span class="alert-action-txt">Recommended Actions</span></div>
+      </div>
+      <div class="alert-detail">${a.detail}</div>
+    </div>
+  `).join('');
+}
+
+// Init static advisory grid
+renderAlerts();
+</script>
+</body>
+</html>

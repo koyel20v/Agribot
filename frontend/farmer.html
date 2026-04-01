@@ -1,0 +1,857 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgriGenius – Farmer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green-dark:#1a3a2a; --green-mid:#2d6a4f; --green-bright:#52b788;
+    --green-light:#b7e4c7; --green-pale:#d8f3dc; --gold:#e9c46a;
+    --red:#e63946; --cream:#fdfdf5; --white:#ffffff;
+    --text:#1a2e1e; --text-muted:#4a6555;
+    --border:rgba(82,183,136,.2); --shadow:0 4px 24px rgba(26,58,42,.1); --radius:16px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+  .app{display:flex;min-height:100vh;}
+  .sidebar{width:260px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;padding:28px 20px;position:fixed;top:0;left:0;bottom:0;z-index:50;}
+  .sidebar-logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .sidebar-logo span{color:var(--green-bright);}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500;text-decoration:none;cursor:pointer;margin-bottom:4px;transition:all .2s;background:none;border:none;font-family:'DM Sans',sans-serif;width:100%;text-align:left;}
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .nav-item.active{background:var(--green-bright);color:#fff;}
+  .btn-logout{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:rgba(230,57,70,.12);color:#ff8a8a;border:1px solid rgba(230,57,70,.25);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;width:100%;text-align:left;margin-top:8px;}
+  .btn-logout:hover{background:rgba(230,57,70,.25);}
+  .sidebar-footer{margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:.8rem;color:rgba(255,255,255,.4);}
+  .farmer-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green-bright),var(--green-mid));display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:10px;}
+  .sidebar-user-name{color:rgba(255,255,255,.85);font-weight:600;font-size:.88rem;margin-bottom:2px;}
+  .sidebar-user-loc{color:rgba(255,255,255,.4);font-size:.78rem;}
+
+  .main{margin-left:260px;flex:1;padding:36px 40px;}
+  .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:12px;}
+  .page-header h1{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--green-dark);}
+  .page-header p{color:var(--text-muted);font-size:.95rem;margin-top:4px;}
+
+  .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:28px;margin-bottom:28px;}
+  .card-title{font-size:1rem;font-weight:700;color:var(--green-dark);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .card-title .dot{width:8px;height:8px;border-radius:50%;background:var(--green-bright);}
+
+  .form-row{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+  .form-group{flex:1;min-width:180px;}
+  .form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--text-muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.04em;}
+  .form-group select,.form-group textarea{width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--cream);outline:none;transition:border-color .2s;resize:none;}
+  .form-group select:focus,.form-group textarea:focus{border-color:var(--green-bright);box-shadow:0 0 0 3px rgba(82,183,136,.15);}
+  .form-group textarea{min-height:110px;}
+
+  .input-with-btn{position:relative;}
+  .voice-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--green-pale);border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+  .voice-btn.recording{background:#ffe0e0;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,.3);}50%{box-shadow:0 0 0 6px rgba(230,57,70,0);}}
+
+  .form-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .btn-submit{background:var(--green-mid);color:#fff;border:none;padding:13px 32px;border-radius:50px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:8px;}
+  .btn-submit:hover{background:var(--green-dark);transform:translateY(-1px);}
+  .btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+  .btn-clear{background:none;border:1.5px solid var(--border);color:var(--text-muted);padding:13px 22px;border-radius:50px;font-size:.9rem;cursor:pointer;}
+  .btn-clear:hover{border-color:var(--red);color:var(--red);}
+
+  .response-area{display:none;}
+  .response-area.visible{display:block;}
+  .response-box{background:linear-gradient(135deg,var(--green-pale),rgba(255,255,255,.6));border:1px solid var(--green-light);border-radius:14px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;}
+  .response-box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green-bright);}
+  .response-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-mid);margin-bottom:8px;}
+  .response-text{font-size:.95rem;line-height:1.75;color:var(--text);white-space:pre-wrap;}
+
+  .source-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:50px;font-size:.78rem;font-weight:600;background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;}
+  .status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:600;}
+  .status-pending{background:#fff3cd;color:#7d5a00;border:1px solid #f0c14b;}
+  .status-verified{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+  .status-rejected{background:#fde8ea;color:#c0392b;border:1px solid #f5c6cb;}
+
+  .loading-dots{display:flex;gap:5px;align-items:center;}
+  .loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--green-bright);animation:bounce 1.2s infinite;}
+  .loading-dots span:nth-child(2){animation-delay:.2s;}
+  .loading-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes bounce{0%,80%,100%{transform:scale(.8);opacity:.6;}40%{transform:scale(1.2);opacity:1;}}
+
+  .history-list{display:flex;flex-direction:column;gap:14px;}
+  .history-item{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px 20px;cursor:pointer;transition:all .2s;display:flex;gap:16px;align-items:flex-start;}
+  .history-item:hover{border-color:var(--green-bright);}
+  .h-icon{font-size:1.4rem;flex-shrink:0;}
+  .h-content{flex:1;}
+  .h-question{font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:5px;}
+  .h-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .h-time{font-size:.78rem;color:var(--text-muted);}
+  .h-src{font-size:.72rem;background:var(--green-pale);color:var(--green-mid);padding:2px 8px;border-radius:50px;font-weight:600;}
+  .h-answer{font-size:.85rem;color:var(--text-muted);line-height:1.55;margin-top:8px;display:none;border-top:1px solid var(--border);padding-top:10px;white-space:pre-wrap;}
+  .history-item.expanded .h-answer{display:block;}
+  .history-empty{text-align:center;color:var(--text-muted);padding:40px 20px;font-size:.9rem;}
+  .history-empty .empty-icon{font-size:3rem;display:block;margin-bottom:10px;}
+
+  .toast{position:fixed;bottom:28px;right:28px;background:var(--green-dark);color:#fff;padding:14px 22px;border-radius:12px;font-size:.9rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:all .35s;z-index:999;display:flex;align-items:center;gap:10px;}
+  .toast.show{transform:none;opacity:1;}
+
+  .error-banner{background:#fde8ea;border:1px solid #f5c6cb;color:#c0392b;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:none;font-size:.88rem;}
+  .error-banner.show{display:block;}
+
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .spin{display:inline-block;animation:spin .7s linear infinite;}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">🌿 Agri<span>Genius</span></div>
+    <a class="nav-item active" href="farmer.html"><span>🌾</span> My Dashboard</a>
+    <a class="nav-item" href="index.html"><span>🏠</span> Home</a>
+    <button class="btn-logout" onclick="handleLogout()">🚪 Sign Out</button>
+    <div class="sidebar-footer">
+      <div class="farmer-avatar">👨‍🌾</div>
+      <div class="sidebar-user-name" id="sidebarUserName">Farmer</div>
+      <div class="sidebar-user-loc"  id="sidebarUserLoc">India</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <h1>Farmer Dashboard</h1>
+        <p id="dashboardGreeting">Ask any farming question, get expert AI-verified answers.</p>
+      </div>
+    </div>
+
+    -- Ask Question --
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Ask a Farming Question</div>
+      <div class="error-banner" id="askError"></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <label>Your Question</label>
+          <div class="input-with-btn">
+            <textarea id="questionInput" placeholder="e.g., My rice crop leaves are turning yellow. What should I do?" style="padding-right:56px;"></textarea>
+            <button class="voice-btn" id="voiceBtn" title="Voice Input" onclick="toggleVoice()">🎙️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Language</label>
+          <select id="langSelect">
+            <option value="en">🇬🇧 English</option>
+            <option value="hi">🇮🇳 Hindi</option>
+            <option value="bn">🇧🇩 Bengali</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-submit" id="submitBtn" onclick="submitQuestion()">🔍 Get Answer</button>
+        <button class="btn-clear" onclick="clearForm()">Clear</button>
+        <span id="charCount" style="font-size:.8rem;color:var(--text-muted);margin-left:auto;">0 / 500</span>
+      </div>
+    </div>
+
+    -- Response --
+    <div class="card response-area" id="responseArea">
+      <div class="card-title"><span class="dot"></span> AI Response</div>
+      <div id="loadingState" style="display:none;padding:20px 0;align-items:center;gap:12px;">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <span style="color:var(--text-muted);font-size:.9rem;">Running pipeline — KG search + LLM generation…</span>
+      </div>
+      <div id="responseContent" style="display:none;">
+        <div class="response-box">
+          <div class="response-label">🤖 AI-Generated Answer</div>
+          <div class="response-text" id="aiAnswer"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;">
+          <span class="status-badge status-pending">⏳ Pending Validation</span>
+          <span class="source-badge" id="sourceBadge"></span>
+          <span style="font-size:.8rem;color:var(--text-muted);" id="responseTime"></span>
+        </div>
+      </div>
+    </div>
+
+    !-- History --
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;"><span class="dot"></span> Previous Queries</div>
+        <button onclick="loadHistory()" style="background:none;border:none;color:var(--green-mid);font-size:.82rem;cursor:pointer;">↻ Refresh</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty"><span class="empty-icon">📭</span>Loading your history…</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:8000';
+
+// ── STATE ────────────────────────────────────────────────────────
+// Declare these first — authGuard() below will populate them.
+let currentUser  = null;
+let currentToken = null;
+
+// ── AUTH GUARD ───────────────────────────────────────────────────
+// FIX: authGuard now runs synchronously and STOPS the rest of the
+// script from executing if the user is not authenticated, by throwing
+// before loadHistory() is ever reached.
+// We also validate role strictly = 'farmer' so officers can't sneak in.
+(function authGuard() {
+  const storedUser  = localStorage.getItem('agri_user');
+  const storedToken = localStorage.getItem('agri_token');
+
+  // Missing token or user data → kick to login
+  if (!storedUser || !storedToken) {
+    window.location.replace('index.html');
+    return;
+  }
+
+  // Token must be a real JWT string — not "null" / "undefined" / ""
+  if (storedToken === 'null' || storedToken === 'undefined' || storedToken.trim() === '') {
+    localStorage.clear();
+    window.location.replace('index.html');
+    return;
+  }
+
+  try {
+    const user = JSON.parse(storedUser);
+
+    // Must be a farmer
+    if (!user || user.role !== 'farmer') {
+      localStorage.clear();
+      window.location.replace('index.html');
+      return;
+    }
+
+    // ✅ All good — populate globals
+    currentUser  = user;
+    currentToken = storedToken;
+
+    // Populate UI
+    document.getElementById('sidebarUserName').textContent   = user.name     || 'Farmer';
+    document.getElementById('sidebarUserLoc').textContent    = user.location || 'India';
+    document.getElementById('dashboardGreeting').textContent =
+      `Welcome back, ${(user.name || 'Farmer').split(' ')[0]}! Ask any farming question below.`;
+
+    const langSelect = document.getElementById('langSelect');
+    if (user.language) langSelect.value = user.language;
+
+  } catch (e) {
+    localStorage.clear();
+    window.location.replace('index.html');
+  }
+})();
+
+// ── LOGOUT ───────────────────────────────────────────────────────
+function handleLogout() {
+  if (!confirm('Are you sure you want to sign out?')) return;
+  localStorage.clear();
+  window.location.href = 'index.html';
+}
+
+// ── CHAR COUNTER ─────────────────────────────────────────────────
+document.getElementById('questionInput').addEventListener('input', function () {
+  document.getElementById('charCount').textContent = `${this.value.length} / 500`;
+  if (this.value.length > 500) this.value = this.value.slice(0, 500);
+});
+
+// ── VOICE ────────────────────────────────────────────────────────
+let isRecording = false;
+function toggleVoice() {
+  isRecording = !isRecording;
+  const btn = document.getElementById('voiceBtn');
+  btn.classList.toggle('recording', isRecording);
+  btn.textContent = isRecording ? '🔴' : '🎙️';
+  if (isRecording) {
+    showToast('🎙️ Listening… (demo — type your question)');
+    setTimeout(() => {
+      isRecording = false;
+      btn.classList.remove('recording');
+      btn.textContent = '🎙️';
+    }, 2500);
+  }
+}
+
+// ── SUBMIT — calls POST /ask ──────────────────────────────────────
+async function submitQuestion() {
+  const q         = document.getElementById('questionInput').value.trim();
+  const btn       = document.getElementById('submitBtn');
+  const errBanner = document.getElementById('askError');
+  errBanner.classList.remove('show');
+
+  if (!q) { showToast('⚠️ Please enter a question first.'); return; }
+
+  // FIX: guard against missing token before making any API call
+  if (!currentToken) {
+    showToast('⚠️ Session expired. Please log in again.');
+    setTimeout(() => window.location.replace('index.html'), 1500);
+    return;
+  }
+
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spin">⏳</span> Processing…';
+
+  const responseArea = document.getElementById('responseArea');
+  responseArea.classList.add('visible');
+  document.getElementById('loadingState').style.display    = 'flex';
+  document.getElementById('responseContent').style.display = 'none';
+  responseArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  try {
+    const res = await fetch(`${API}/ask`, {
+      method:  'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${currentToken}`,   // ← always a real token here
+      },
+      body: JSON.stringify({ question: q }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      document.getElementById('loadingState').style.display = 'none';
+      responseArea.classList.remove('visible');
+
+      // FIX: if the server returns 401, the token is stale → force re-login
+      if (res.status === 401) {
+        localStorage.clear();
+        showToast('⚠️ Session expired. Please log in again.');
+        setTimeout(() => window.location.replace('index.html'), 1500);
+        return;
+      }
+
+      errBanner.textContent = data.detail || 'Something went wrong. Please try again.';
+      errBanner.classList.add('show');
+      return;
+    }
+
+    document.getElementById('loadingState').style.display    = 'none';
+    document.getElementById('responseContent').style.display = 'block';
+    document.getElementById('aiAnswer').textContent          = data.answer;
+
+    const sourceLabels = {
+      kg:   '🧠 Source: Knowledge Graph',
+      web:  '🌐 Source: Web Search',
+      none: '💡 Source: LLM Knowledge',
+    };
+    document.getElementById('sourceBadge').textContent   = sourceLabels[data.source] || data.source;
+    document.getElementById('responseTime').textContent  = `Answered at ${new Date().toLocaleTimeString()}`;
+
+    showToast('✅ Answer received! Sent to officer for verification.');
+    loadHistory();
+
+  } catch (err) {
+    document.getElementById('loadingState').style.display = 'none';
+    responseArea.classList.remove('visible');
+    errBanner.textContent = 'Cannot reach the server. Make sure the backend is running on port 8000.';
+    errBanner.classList.add('show');
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '🔍 Get Answer';
+  }
+}
+
+function clearForm() {
+  document.getElementById('questionInput').value = '';
+  document.getElementById('charCount').textContent = '0 / 500';
+  document.getElementById('responseArea').classList.remove('visible');
+  document.getElementById('askError').classList.remove('show');
+}
+
+// ── HISTORY — calls GET /queries/my ──────────────────────────────
+async function loadHistory() {
+  // FIX: Never call the API if we have no token.
+  // In the original code, loadHistory() was called at page-bottom
+  // before authGuard() had a chance to set currentToken, so the
+  // request went out with Authorization: Bearer null → 401 every time.
+  if (!currentToken) {
+    renderHistory([]);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/queries/my`, {
+      headers: {
+        'Authorization': `Bearer ${currentToken}`,  // ← guaranteed non-null
+      },
+    });
+
+    // FIX: 401 here means the stored token is expired/invalid → re-login
+    if (res.status === 401) {
+      localStorage.clear();
+      window.location.replace('index.html');
+      return;
+    }
+
+    if (!res.ok) {
+      renderHistory([]);
+      return;
+    }
+
+    const rows = await res.json();
+    renderHistory(rows);
+
+  } catch (e) {
+    renderHistory([]);
+  }
+}
+
+function renderHistory(rows) {
+  const list = document.getElementById('historyList');
+  if (!rows || !rows.length) {
+    list.innerHTML = '<div class="history-empty"><span class="empty-icon">📭</span>No queries yet. Ask your first question above!</div>';
+    return;
+  }
+
+  const statusMap = {
+    pending:  '<span class="status-badge status-pending"  style="font-size:.72rem;padding:2px 10px;">⏳ Pending</span>',
+    approved: '<span class="status-badge status-verified" style="font-size:.72rem;padding:2px 10px;">✅ Verified</span>',
+    rejected: '<span class="status-badge status-rejected" style="font-size:.72rem;padding:2px 10px;">❌ Rejected</span>',
+  };
+  const srcMap = { kg: '🧠 KG', web: '🌐 Web', none: '💡 LLM' };
+
+  list.innerHTML = rows.map(item => `
+    <div class="history-item" onclick="this.classList.toggle('expanded')">
+      <div class="h-icon">🌾</div>
+      <div class="h-content">
+        <div class="h-question">${item.question}</div>
+        <div class="h-meta">
+          <span class="h-time">${item.created_at}</span>
+          <span class="h-src">${srcMap[item.source] || item.source}</span>
+          ${statusMap[item.status] || ''}
+        </div>
+        <div class="h-answer">${item.validated_answer || item.ai_response || ''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+// FIX: loadHistory() is now called AFTER authGuard() has already run
+// and confirmed currentToken is a real value. The original code called
+// loadHistory() here too, but the surrounding IIFE for authGuard didn't
+// guarantee execution order in all browsers when the token was stale.
+// Now: authGuard sets currentToken → loadHistory() reads it safely.
+loadHistory();
+</script>
+</body>
+</html> -->
+
+
+<!-- farmer.html — AgriGenius Farmer Dashboard (updated: Alerts nav link added) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgriGenius – Farmer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green-dark:#1a3a2a; --green-mid:#2d6a4f; --green-bright:#52b788;
+    --green-light:#b7e4c7; --green-pale:#d8f3dc; --gold:#e9c46a;
+    --red:#e63946; --cream:#fdfdf5; --white:#ffffff;
+    --text:#1a2e1e; --text-muted:#4a6555;
+    --border:rgba(82,183,136,.2); --shadow:0 4px 24px rgba(26,58,42,.1); --radius:16px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+  .app{display:flex;min-height:100vh;}
+  .sidebar{width:260px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;padding:28px 20px;position:fixed;top:0;left:0;bottom:0;z-index:50;}
+  .sidebar-logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;margin-bottom:40px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .sidebar-logo span{color:var(--green-bright);}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500;text-decoration:none;cursor:pointer;margin-bottom:4px;transition:all .2s;background:none;border:none;font-family:'DM Sans',sans-serif;width:100%;text-align:left;}
+  .nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .nav-item.active{background:var(--green-bright);color:#fff;}
+  /* Alert nav link — subtle highlight */
+  .nav-item.alerts-link{color:rgba(255,220,100,.85);}
+  .nav-item.alerts-link:hover{background:rgba(233,196,106,.12);color:#ffd700;}
+  .btn-logout{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:rgba(230,57,70,.12);color:#ff8a8a;border:1px solid rgba(230,57,70,.25);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;width:100%;text-align:left;margin-top:8px;}
+  .btn-logout:hover{background:rgba(230,57,70,.25);}
+  .sidebar-footer{margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:.8rem;color:rgba(255,255,255,.4);}
+  .farmer-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green-bright),var(--green-mid));display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:10px;}
+  .sidebar-user-name{color:rgba(255,255,255,.85);font-weight:600;font-size:.88rem;margin-bottom:2px;}
+  .sidebar-user-loc{color:rgba(255,255,255,.4);font-size:.78rem;}
+
+  .main{margin-left:260px;flex:1;padding:36px 40px;}
+  .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:12px;}
+  .page-header h1{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--green-dark);}
+  .page-header p{color:var(--text-muted);font-size:.95rem;margin-top:4px;}
+
+  .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:28px;margin-bottom:28px;}
+  .card-title{font-size:1rem;font-weight:700;color:var(--green-dark);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .card-title .dot{width:8px;height:8px;border-radius:50%;background:var(--green-bright);}
+
+  .form-row{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+  .form-group{flex:1;min-width:180px;}
+  .form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--text-muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.04em;}
+  .form-group select,.form-group textarea{width:100%;padding:12px 16px;border-radius:12px;border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--cream);outline:none;transition:border-color .2s;resize:none;}
+  .form-group select:focus,.form-group textarea:focus{border-color:var(--green-bright);box-shadow:0 0 0 3px rgba(82,183,136,.15);}
+  .form-group textarea{min-height:110px;}
+
+  .input-with-btn{position:relative;}
+  .voice-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--green-pale);border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;}
+  .voice-btn.recording{background:#ffe0e0;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,.3);}50%{box-shadow:0 0 0 6px rgba(230,57,70,0);}}
+
+  .form-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .btn-submit{background:var(--green-mid);color:#fff;border:none;padding:13px 32px;border-radius:50px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:8px;}
+  .btn-submit:hover{background:var(--green-dark);transform:translateY(-1px);}
+  .btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+  .btn-clear{background:none;border:1.5px solid var(--border);color:var(--text-muted);padding:13px 22px;border-radius:50px;font-size:.9rem;cursor:pointer;}
+  .btn-clear:hover{border-color:var(--red);color:var(--red);}
+
+  .response-area{display:none;}
+  .response-area.visible{display:block;}
+  .response-box{background:linear-gradient(135deg,var(--green-pale),rgba(255,255,255,.6));border:1px solid var(--green-light);border-radius:14px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;}
+  .response-box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green-bright);}
+  .response-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green-mid);margin-bottom:8px;}
+  .response-text{font-size:.95rem;line-height:1.75;color:var(--text);white-space:pre-wrap;}
+
+  .source-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:50px;font-size:.78rem;font-weight:600;background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;}
+  .status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:600;}
+  .status-pending{background:#fff3cd;color:#7d5a00;border:1px solid #f0c14b;}
+  .status-verified{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+  .status-rejected{background:#fde8ea;color:#c0392b;border:1px solid #f5c6cb;}
+
+  .loading-dots{display:flex;gap:5px;align-items:center;}
+  .loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--green-bright);animation:bounce 1.2s infinite;}
+  .loading-dots span:nth-child(2){animation-delay:.2s;}
+  .loading-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes bounce{0%,80%,100%{transform:scale(.8);opacity:.6;}40%{transform:scale(1.2);opacity:1;}}
+
+  .history-list{display:flex;flex-direction:column;gap:14px;}
+  .history-item{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px 20px;cursor:pointer;transition:all .2s;display:flex;gap:16px;align-items:flex-start;}
+  .history-item:hover{border-color:var(--green-bright);}
+  .h-icon{font-size:1.4rem;flex-shrink:0;}
+  .h-content{flex:1;}
+  .h-question{font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:5px;}
+  .h-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .h-time{font-size:.78rem;color:var(--text-muted);}
+  .h-src{font-size:.72rem;background:var(--green-pale);color:var(--green-mid);padding:2px 8px;border-radius:50px;font-weight:600;}
+  .h-answer{font-size:.85rem;color:var(--text-muted);line-height:1.55;margin-top:8px;display:none;border-top:1px solid var(--border);padding-top:10px;white-space:pre-wrap;}
+  .history-item.expanded .h-answer{display:block;}
+  .history-empty{text-align:center;color:var(--text-muted);padding:40px 20px;font-size:.9rem;}
+  .history-empty .empty-icon{font-size:3rem;display:block;margin-bottom:10px;}
+
+  .toast{position:fixed;bottom:28px;right:28px;background:var(--green-dark);color:#fff;padding:14px 22px;border-radius:12px;font-size:.9rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:all .35s;z-index:999;display:flex;align-items:center;gap:10px;}
+  .toast.show{transform:none;opacity:1;}
+
+  .error-banner{background:#fde8ea;border:1px solid #f5c6cb;color:#c0392b;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:none;font-size:.88rem;}
+  .error-banner.show{display:block;}
+
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .spin{display:inline-block;animation:spin .7s linear infinite;}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">🌿 Agri<span>Genius</span></div>
+    <a class="nav-item active" href="farmer.html"><span>🌾</span> My Dashboard</a>
+    <!-- ✅ ALERTS NAVIGATION LINK -->
+    <a class="nav-item alerts-link" href="alerts.html"><span>🔔</span> Alerts</a>
+    <a class="nav-item" href="index.html"><span>🏠</span> Home</a>
+    <button class="btn-logout" onclick="handleLogout()">🚪 Sign Out</button>
+    <div class="sidebar-footer">
+      <div class="farmer-avatar">👨‍🌾</div>
+      <div class="sidebar-user-name" id="sidebarUserName">Farmer</div>
+      <div class="sidebar-user-loc"  id="sidebarUserLoc">India</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <h1>Farmer Dashboard</h1>
+        <p id="dashboardGreeting">Ask any farming question, get expert AI-verified answers.</p>
+      </div>
+    </div>
+
+    <!-- Ask Question -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Ask a Farming Question</div>
+      <div class="error-banner" id="askError"></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <label>Your Question</label>
+          <div class="input-with-btn">
+            <textarea id="questionInput" placeholder="e.g., My rice crop leaves are turning yellow. What should I do?" style="padding-right:56px;"></textarea>
+            <button class="voice-btn" id="voiceBtn" title="Voice Input" onclick="toggleVoice()">🎙️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Language</label>
+          <select id="langSelect">
+            <option value="en">🇬🇧 English</option>
+            <option value="hi">🇮🇳 Hindi</option>
+            <option value="bn">🇧🇩 Bengali</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-submit" id="submitBtn" onclick="submitQuestion()">🔍 Get Answer</button>
+        <button class="btn-clear" onclick="clearForm()">Clear</button>
+        <span id="charCount" style="font-size:.8rem;color:var(--text-muted);margin-left:auto;">0 / 500</span>
+      </div>
+    </div>
+
+    <!-- Response -->
+    <div class="card response-area" id="responseArea">
+      <div class="card-title"><span class="dot"></span> AI Response</div>
+      <div id="loadingState" style="display:none;padding:20px 0;align-items:center;gap:12px;">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <span style="color:var(--text-muted);font-size:.9rem;">Running pipeline — KG search + LLM generation…</span>
+      </div>
+      <div id="responseContent" style="display:none;">
+        <div class="response-box">
+          <div class="response-label">🤖 AI-Generated Answer</div>
+          <div class="response-text" id="aiAnswer"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;">
+          <span class="status-badge status-pending">⏳ Pending Validation</span>
+          <span class="source-badge" id="sourceBadge"></span>
+          <span style="font-size:.8rem;color:var(--text-muted);" id="responseTime"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;"><span class="dot"></span> Previous Queries</div>
+        <button onclick="loadHistory()" style="background:none;border:none;color:var(--green-mid);font-size:.82rem;cursor:pointer;">↻ Refresh</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty"><span class="empty-icon">📭</span>Loading your history…</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:8000';
+
+// ── STATE ────────────────────────────────────────────────────────
+let currentUser  = null;
+let currentToken = null;
+
+// ── AUTH GUARD ───────────────────────────────────────────────────
+(function authGuard() {
+  const raw = localStorage.getItem('agri_user');
+  currentToken = localStorage.getItem('agri_token');
+  if (!raw || !currentToken) {
+    window.location.replace('index.html');
+    throw new Error('Not authenticated');
+  }
+  try {
+    currentUser = JSON.parse(raw);
+  } catch {
+    window.location.replace('index.html');
+    throw new Error('Bad session data');
+  }
+  if (currentUser.role !== 'farmer') {
+    window.location.replace('index.html');
+    throw new Error('Not a farmer account');
+  }
+
+  // Populate sidebar
+  document.getElementById('sidebarUserName').textContent = currentUser.name || 'Farmer';
+  document.getElementById('sidebarUserLoc').textContent  = currentUser.location || 'India';
+  document.getElementById('dashboardGreeting').textContent =
+    `Welcome back, ${currentUser.name}! What farming question can we help with today?`;
+
+  // Save location for alerts page pre-fill
+  if (currentUser.location) {
+    localStorage.setItem('agrigenius_location', currentUser.location);
+  }
+})();
+
+// ── CHAR COUNTER ─────────────────────────────────────────────────
+document.getElementById('questionInput').addEventListener('input', function () {
+  const len = this.value.length;
+  document.getElementById('charCount').textContent = `${len} / 500`;
+  if (len > 500) this.value = this.value.slice(0, 500);
+});
+
+// ── SUBMIT QUESTION ──────────────────────────────────────────────
+async function submitQuestion() {
+  const question = document.getElementById('questionInput').value.trim();
+  const askErr   = document.getElementById('askError');
+
+  askErr.classList.remove('show');
+  if (!question) {
+    askErr.textContent = 'Please enter a question.';
+    askErr.classList.add('show');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spin">⏳</span> Thinking…';
+
+  const responseArea   = document.getElementById('responseArea');
+  const loadingState   = document.getElementById('loadingState');
+  const responseContent = document.getElementById('responseContent');
+
+  responseArea.classList.add('visible');
+  loadingState.style.display    = 'flex';
+  responseContent.style.display = 'none';
+
+  try {
+    const res = await fetch(`${API}/ask`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentToken}`,
+      },
+      body: JSON.stringify({ question }),
+    });
+
+    const data = await res.json();
+
+    loadingState.style.display    = 'none';
+    responseContent.style.display = 'block';
+
+    if (!res.ok) {
+      if (res.status === 401) { localStorage.clear(); window.location.replace('index.html'); return; }
+      askErr.textContent = data.detail || 'Failed to get answer.';
+      askErr.classList.add('show');
+      responseArea.classList.remove('visible');
+      return;
+    }
+
+    document.getElementById('aiAnswer').textContent    = data.answer || '';
+    document.getElementById('sourceBadge').textContent = `🔗 Source: ${data.source || 'ai'}`;
+    document.getElementById('responseTime').textContent = data.created_at ? `📅 ${data.created_at}` : '';
+
+    showToast('✅ Answer received!');
+    loadHistory();
+
+  } catch (err) {
+    loadingState.style.display = 'none';
+    askErr.textContent = 'Cannot reach server. Is the backend running on port 8000?';
+    askErr.classList.add('show');
+    responseArea.classList.remove('visible');
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '🔍 Get Answer';
+  }
+}
+
+// ── CLEAR FORM ───────────────────────────────────────────────────
+function clearForm() {
+  document.getElementById('questionInput').value = '';
+  document.getElementById('charCount').textContent = '0 / 500';
+  document.getElementById('askError').classList.remove('show');
+  document.getElementById('responseArea').classList.remove('visible');
+}
+
+// ── VOICE INPUT ──────────────────────────────────────────────────
+let recognition = null;
+function toggleVoice() {
+  const btn = document.getElementById('voiceBtn');
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    showToast('⚠️ Voice input not supported in this browser.');
+    return;
+  }
+  if (recognition) {
+    recognition.stop();
+    recognition = null;
+    btn.classList.remove('recording');
+    btn.textContent = '🎙️';
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = document.getElementById('langSelect').value === 'hi' ? 'hi-IN' :
+                     document.getElementById('langSelect').value === 'bn' ? 'bn-IN' : 'en-IN';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  btn.classList.add('recording');
+  btn.textContent = '⏹️';
+  recognition.onresult = e => {
+    document.getElementById('questionInput').value += e.results[0][0].transcript + ' ';
+  };
+  recognition.onend = () => {
+    btn.classList.remove('recording');
+    btn.textContent = '🎙️';
+    recognition = null;
+  };
+  recognition.start();
+}
+
+// ── LOAD HISTORY ─────────────────────────────────────────────────
+async function loadHistory() {
+  const list = document.getElementById('historyList');
+  try {
+    const res = await fetch(`${API}/queries/my`, {
+      headers: { 'Authorization': `Bearer ${currentToken}` },
+    });
+    if (res.status === 401) { localStorage.clear(); window.location.replace('index.html'); return; }
+    const rows = await res.json();
+
+    if (!rows || rows.length === 0) {
+      list.innerHTML = '<div class="history-empty"><span class="empty-icon">📭</span>No queries yet. Ask your first question above!</div>';
+      return;
+    }
+
+    const statusIcons = { pending: '⏳', approved: '✅', rejected: '❌' };
+    list.innerHTML = rows.map(q => `
+      <div class="history-item" onclick="this.classList.toggle('expanded')">
+        <div class="h-icon">${statusIcons[q.status] || '📋'}</div>
+        <div class="h-content">
+          <div class="h-question">${escHtml(q.question)}</div>
+          <div class="h-meta">
+            <span class="h-time">${q.created_at}</span>
+            <span class="h-src">${q.source || 'ai'}</span>
+            <span class="status-badge status-${q.status}">${q.status}</span>
+          </div>
+          <div class="h-answer">${escHtml(q.validated_answer || q.ai_response || '—')}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch {
+    list.innerHTML = '<div class="history-empty"><span class="empty-icon">⚠️</span>Could not load history. Is the backend running?</div>';
+  }
+}
+
+// ── LOGOUT ───────────────────────────────────────────────────────
+function handleLogout() {
+  localStorage.clear();
+  window.location.replace('index.html');
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+loadHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgriGenius – Smart Farming Advisory</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green-dark:   #1a3a2a;
+    --green-mid:    #2d6a4f;
+    --green-bright: #52b788;
+    --green-light:  #b7e4c7;
+    --green-pale:   #d8f3dc;
+    --gold:         #e9c46a;
+    --cream:        #fdfdf5;
+    --text:         #1a2e1e;
+    --text-muted:   #4a6555;
+    --shadow:       0 8px 40px rgba(26,58,42,.13);
+    --radius:       18px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 6vw;
+    background: rgba(253,253,245,.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(82,183,136,.15);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: var(--green-dark); }
+  .nav-logo span { color: var(--green-bright); }
+  .nav-links { display: flex; gap: 12px; }
+  .nav-links a, .nav-links button { padding: 9px 22px; border-radius: 50px; font-size: .9rem; font-weight: 500; text-decoration: none; transition: all .25s; cursor: pointer; font-family: 'DM Sans', sans-serif; background: none; border: none; }
+  .nav-links .btn-outline { border: 1.5px solid var(--green-mid); color: var(--green-mid); }
+  .nav-links .btn-outline:hover { background: var(--green-mid); color: #fff; }
+  .nav-links .btn-fill { background: var(--green-mid); color: #fff; }
+  .nav-links .btn-fill:hover { background: var(--green-dark); }
+  .nav-links .btn-signup { border: 1.5px solid var(--gold); color: var(--green-dark); background: rgba(233,196,106,.15); }
+  .nav-links .btn-signup:hover { background: var(--gold); color: var(--green-dark); }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 6vw 80px; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse 40% 30% at 85% 15%, rgba(233,196,106,.35) 0%, transparent 60%), repeating-linear-gradient(170deg, rgba(45,106,79,.07) 0px, rgba(45,106,79,.07) 18px, rgba(82,183,136,.05) 18px, rgba(82,183,136,.05) 36px), linear-gradient(180deg, #c9e8f5 0%, #d8efd0 30%, #a8d5a2 52%, #7ab87a 65%, #4a9e5c 78%, #2d6a4f 90%, #1a3a2a 100%); }
+  .hero-overlay { position: absolute; inset: 0; z-index: 0; background: linear-gradient(100deg, rgba(253,253,245,.92) 0%, rgba(216,243,220,.70) 50%, rgba(82,183,136,.10) 100%); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .35; z-index: 0; }
+  .blob-1 { width: 420px; height: 420px; background: var(--green-light); top: -80px; right: 5%; }
+  .blob-2 { width: 300px; height: 300px; background: var(--gold); opacity:.14; bottom: 5%; right: 18%; }
+  .blob-3 { width: 200px; height: 200px; background: var(--green-bright); opacity:.2; top: 40%; left: -60px; }
+
+  .hero-content { position: relative; z-index: 1; max-width: 600px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 7px; background: var(--green-pale); border: 1px solid var(--green-light); color: var(--green-mid); font-size: .8rem; font-weight: 600; letter-spacing: .05em; padding: 6px 16px; border-radius: 50px; margin-bottom: 28px; text-transform: uppercase; }
+  .hero-badge::before { content: '●'; color: var(--green-bright); font-size: .6rem; }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 5rem); line-height: 1.1; font-weight: 900; color: var(--green-dark); margin-bottom: 22px; }
+  h1 em { font-style: normal; color: var(--green-bright); }
+  .hero-sub { font-size: 1.15rem; line-height: 1.7; color: var(--text-muted); max-width: 480px; margin-bottom: 44px; }
+  .hero-btns { display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn-primary, .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 15px 32px; border-radius: 50px; font-size: 1rem; font-weight: 600; text-decoration: none; transition: all .28s; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; }
+  .btn-primary { background: var(--green-mid); color: #fff; box-shadow: 0 6px 24px rgba(45,106,79,.35); }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); }
+  .btn-secondary { background: rgba(255,255,255,.7); color: var(--green-dark); border: 1.5px solid var(--green-light); backdrop-filter: blur(6px); }
+  .btn-secondary:hover { background: #fff; border-color: var(--green-bright); transform: translateY(-2px); }
+
+  .features { padding: 100px 6vw; background: linear-gradient(180deg, var(--cream) 0%, var(--green-pale) 100%); }
+  .section-label { text-align: center; font-size: .8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--green-bright); margin-bottom: 12px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; text-align: center; color: var(--green-dark); margin-bottom: 60px; line-height: 1.2; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+  .feat-card { background: #fff; border-radius: var(--radius); padding: 32px 26px; box-shadow: var(--shadow); border: 1px solid rgba(183,228,199,.4); transition: transform .25s; }
+  .feat-card:hover { transform: translateY(-6px); }
+  .feat-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--green-pale); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 18px; }
+  .feat-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--green-dark); margin-bottom: 10px; }
+  .feat-card p { font-size: .9rem; color: var(--text-muted); line-height: 1.65; }
+
+  .how { padding: 100px 6vw; background: var(--green-dark); color: #fff; }
+  .how .section-label { color: var(--green-bright); }
+  .how .section-title { color: #fff; }
+  .steps { display: flex; flex-wrap: wrap; gap: 0; justify-content: center; }
+  .step { flex: 1 1 200px; max-width: 240px; text-align: center; padding: 24px 16px; position: relative; }
+  .step:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 38px; font-size: 1.4rem; color: var(--green-bright); opacity: .6; }
+  .step-num { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--green-bright), var(--green-mid)); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: #fff; margin: 0 auto 16px; }
+  .step h4 { font-size: .95rem; font-weight: 600; margin-bottom: 8px; color: var(--green-light); }
+  .step p { font-size: .83rem; color: rgba(255,255,255,.6); line-height: 1.6; }
+
+  .cta { padding: 100px 6vw; text-align: center; background: linear-gradient(135deg, var(--green-pale) 0%, var(--cream) 100%); }
+  .cta h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,3rem); font-weight: 900; color: var(--green-dark); margin-bottom: 16px; }
+  .cta p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 40px; }
+  .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  footer { background: var(--green-dark); color: rgba(255,255,255,.55); text-align: center; padding: 28px 6vw; font-size: .85rem; }
+  footer span { color: var(--green-bright); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:none;} }
+  .hero-content > * { animation: fadeUp .7s ease both; }
+  .hero-content .hero-badge { animation-delay: .1s; }
+  .hero-content h1 { animation-delay: .22s; }
+  .hero-content .hero-sub { animation-delay: .34s; }
+  .hero-content .hero-btns { animation-delay: .46s; }
+
+  /* ── MODAL ── */
+  .modal-backdrop { position: fixed; inset: 0; z-index: 200; background: rgba(26,58,42,.55); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .modal-backdrop.open { opacity: 1; pointer-events: all; }
+  .modal { background: #fff; border-radius: 24px; width: 100%; max-width: 460px; padding: 40px 36px; box-shadow: 0 24px 80px rgba(26,58,42,.25); position: relative; transform: translateY(24px) scale(.97); transition: transform .35s cubic-bezier(.22,1,.36,1); }
+  .modal-backdrop.open .modal { transform: translateY(0) scale(1); }
+  .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--green-bright), var(--gold)); border-radius: 24px 24px 0 0; }
+  .modal-close { position: absolute; top: 16px; right: 18px; background: var(--green-pale); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--green-dark); }
+  .modal-logo { display: flex; align-items: center; gap: 8px; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--green-dark); margin-bottom: 6px; }
+  .modal-logo span { color: var(--green-bright); }
+  .modal-subtitle { text-align: center; color: var(--text-muted); font-size: .9rem; margin-bottom: 30px; }
+
+  .role-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .role-tab { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 12px; border-radius: 16px; border: 2px solid var(--green-light); background: var(--green-pale); cursor: pointer; transition: all .22s; }
+  .role-tab:hover { border-color: var(--green-bright); }
+  .role-tab.selected { border-color: var(--green-mid); background: var(--green-mid); color: #fff; }
+  .role-tab .r-icon { font-size: 1.8rem; }
+  .role-tab .r-label { font-size: .88rem; font-weight: 700; }
+  .role-tab .r-desc { font-size: .72rem; color: var(--text-muted); text-align: center; }
+  .role-tab.selected .r-desc { color: rgba(255,255,255,.75); }
+
+  .form-field { margin-bottom: 18px; }
+  .form-field label { display: block; font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin-bottom: 7px; }
+  .form-field input { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1.5px solid rgba(82,183,136,.3); font-family: 'DM Sans', sans-serif; font-size: .95rem; color: var(--text); background: var(--cream); outline: none; transition: border-color .2s; }
+  .form-field input:focus { border-color: var(--green-bright); box-shadow: 0 0 0 3px rgba(82,183,136,.15); }
+
+  .login-btn { width: 100%; padding: 14px; border-radius: 50px; background: var(--green-mid); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all .25s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; }
+  .login-btn:hover { background: var(--green-dark); }
+  .login-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+  .msg-box { border-radius: 10px; padding: 10px 14px; font-size: .85rem; margin-bottom: 16px; display: none; align-items: center; gap: 7px; }
+  .msg-box.show { display: flex; }
+  .msg-error   { background: #fde8ea; border: 1px solid #f5c6cb; color: #c0392b; }
+  .msg-success { background: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; }
+
+  .modal-tabs { display: flex; gap: 0; margin-bottom: 28px; border-bottom: 2px solid var(--green-pale); }
+  .modal-tab-btn { flex: 1; padding: 10px; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+  .modal-tab-btn.active { color: var(--green-mid); border-bottom-color: var(--green-mid); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .input-hint { font-size: .72rem; color: var(--text-muted); margin-top: 5px; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { display: inline-block; animation: spin .7s linear infinite; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🌿 Agri<span>Genius</span></div>
+  <div class="nav-links">
+    <button class="btn-outline" onclick="openModal()">Ask a Question</button>
+    <button class="btn-signup" onclick="openSignupModal()">Sign Up</button>
+    <button class="btn-fill"   onclick="openModal()">Login</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="hero-content">
+    <div class="hero-badge">AI-Powered Farming Assistant</div>
+    <h1>Grow Smarter<br>with <em>AgriGenius</em></h1>
+    <p class="hero-sub">Instant AI advisory for every farmer. Ask crop questions, get expert-verified answers powered by a real Knowledge Graph and LLM pipeline.</p>
+    <div class="hero-btns">
+      <button class="btn-primary"   onclick="openModal()">🌾 Get Started</button>
+      <button class="btn-secondary" onclick="openModal()">🔐 Officer Dashboard</button>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-label">Why AgriGenius</div>
+  <h2 class="section-title">Everything a Farmer Needs</h2>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon">🤖</div><h3>AI-Powered Answers</h3><p>Questions flow through a full KG + LLM pipeline — not just a chatbot.</p></div>
+    <div class="feat-card"><div class="feat-icon">🌐</div><h3>Multi-Language Support</h3><p>Ask in English, Hindi, or Bengali. AgriGenius understands your language.</p></div>
+    <div class="feat-card"><div class="feat-icon">✅</div><h3>Officer Verification</h3><p>Agricultural officers review and validate every AI answer.</p></div>
+    <div class="feat-card"><div class="feat-icon">📊</div><h3>Knowledge Graph</h3><p>Answers backed by a real Neo4j knowledge graph of agricultural data.</p></div>
+    <div class="feat-card"><div class="feat-icon">🎙️</div><h3>Voice Input</h3><p>Simply speak your question. Voice input for farmers of all literacy levels.</p></div>
+    <div class="feat-card"><div class="feat-icon">📜</div><h3>Query History</h3><p>Access all past questions and expert answers from your dashboard.</p></div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Simple. Fast. Reliable.</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h4>Ask a Question</h4><p>Type or speak your farming question.</p></div>
+    <div class="step"><div class="step-num">2</div><h4>KG + AI Pipeline</h4><p>Your question runs through FAISS, Neo4j, and the Groq LLM.</p></div>
+    <div class="step"><div class="step-num">3</div><h4>Officer Reviews</h4><p>A qualified agricultural officer validates the answer.</p></div>
+    <div class="step"><div class="step-num">4</div><h4>You Grow Better</h4><p>Receive verified advice and take the right action.</p></div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to Farm Smarter?</h2>
+  <p>Join farmers already using AgriGenius for better harvests.</p>
+  <div class="cta-btns">
+    <button class="btn-primary"   onclick="openModal()">🌾 Start Asking Now</button>
+    <button class="btn-secondary" onclick="openModal()">🔔 Login to Dashboard</button>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <span>AgriGenius</span> — Smart Farming Advisory System · Built for India's Farmers</p>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-backdrop" id="loginModal" onclick="handleBackdropClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-logo">🌿 Agri<span>Genius</span></div>
+    <p class="modal-subtitle">Sign in to your account</p>
+
+    <div class="role-tabs">
+      <div class="role-tab selected" id="tab-farmer" onclick="selectRole('farmer')">
+        <div class="r-icon">🌾</div><div class="r-label">Farmer</div>
+        <div class="r-desc">Ask crop questions &amp; get AI advice</div>
+      </div>
+      <div class="role-tab" id="tab-officer" onclick="selectRole('officer')">
+        <div class="r-icon">👨‍💼</div><div class="r-label">Officer</div>
+        <div class="r-desc">Review &amp; validate farmer queries</div>
+      </div>
+    </div>
+
+    <div class="msg-box msg-error" id="loginError"><span>⚠️</span><span id="loginErrorMsg"></span></div>
+
+    <div class="form-field">
+      <label>Email Address</label>
+      <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" />
+    </div>
+    <div class="form-field">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter your password" onkeydown="if(event.key==='Enter')handleLogin()" />
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="handleLogin()">🔐 Sign In</button>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div class="modal-backdrop" id="signupModal" onclick="if(event.target===this)closeSignupModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSignupModal()">✕</button>
+    <div class="modal-logo">🌿 Agri<span>Genius</span></div>
+    <p class="modal-subtitle">Create your account</p>
+
+    <div class="modal-tabs">
+      <button class="modal-tab-btn active">Sign Up</button>
+      <button class="modal-tab-btn" onclick="closeSignupModal();openModal()">Already have an account?</button>
+    </div>
+
+    <div class="msg-box msg-success" id="signupSuccess"><span>✅</span><span id="signupSuccessMsg"></span></div>
+    <div class="msg-box msg-error"   id="signupError"><span>⚠️</span><span id="signupErrorMsg"></span></div>
+
+    <div class="form-row">
+      <div class="form-field"><label>Full Name</label><input type="text" id="signupName" placeholder="Ramesh Kumar" /></div>
+      <div class="form-field"><label>Location</label><input type="text" id="signupLocation" placeholder="Durgapur" /></div>
+    </div>
+    <div class="form-field"><label>Email Address</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
+    <div class="form-field">
+      <label>Password</label>
+      <input type="password" id="signupPassword" placeholder="Min. 6 characters" />
+      <div class="input-hint">At least 6 characters</div>
+    </div>
+
+    <div class="role-tabs" style="margin-bottom:24px">
+      <div class="role-tab selected" id="signup-tab-farmer" onclick="selectSignupRole('farmer')">
+        <div class="r-icon">🌾</div><div class="r-label">Farmer</div>
+        <div class="r-desc">Ask crop questions</div>
+      </div>
+      <div class="role-tab" id="signup-tab-officer" onclick="selectSignupRole('officer')">
+        <div class="r-icon">👨‍💼</div><div class="r-label">Officer</div>
+        <div class="r-desc">Review queries</div>
+      </div>
+    </div>
+
+    <button class="login-btn" id="signupBtn" onclick="handleSignup()">🌱 Create Account</button>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+const API = 'http://localhost:8000';
+
+// ── SESSION CHECK ───────────────────────────────────────────────
+(function() {
+  const stored = localStorage.getItem('agri_user');
+  if (!stored) return;
+  try {
+    const user = JSON.parse(stored);
+    if (user && user.role === 'farmer')  window.location.replace('farmer.html');
+    if (user && user.role === 'officer') window.location.replace('officer.html');
+  } catch(e) { localStorage.removeItem('agri_user'); }
+})();
+
+// ── STATE ───────────────────────────────────────────────────────
+let selectedRole = 'farmer';
+let selectedSignupRole = 'farmer';
+
+// ── MODAL HELPERS ───────────────────────────────────────────────
+function openModal()        { document.getElementById('loginModal').classList.add('open'); setTimeout(()=>document.getElementById('loginEmail').focus(),350); }
+function closeModal()       { document.getElementById('loginModal').classList.remove('open'); clearLoginError(); }
+function openSignupModal()  { document.getElementById('signupModal').classList.add('open'); setTimeout(()=>document.getElementById('signupName').focus(),350); }
+function closeSignupModal() { document.getElementById('signupModal').classList.remove('open'); }
+function handleBackdropClick(e) { if(e.target===document.getElementById('loginModal'))closeModal(); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){closeModal();closeSignupModal();} });
+
+// ── ROLE SELECTION ───────────────────────────────────────────────
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('tab-farmer').classList.toggle('selected', role==='farmer');
+  document.getElementById('tab-officer').classList.toggle('selected', role==='officer');
+}
+function selectSignupRole(role) {
+  selectedSignupRole = role;
+  document.getElementById('signup-tab-farmer').classList.toggle('selected', role==='farmer');
+  document.getElementById('signup-tab-officer').classList.toggle('selected', role==='officer');
+}
+
+// ── ERROR HELPERS ───────────────────────────────────────────────
+function showLoginError(msg)  { document.getElementById('loginErrorMsg').textContent=msg; document.getElementById('loginError').classList.add('show'); }
+function clearLoginError()    { document.getElementById('loginError').classList.remove('show'); }
+function showSignupError(msg) { document.getElementById('signupErrorMsg').textContent=msg; document.getElementById('signupError').classList.add('show'); document.getElementById('signupSuccess').classList.remove('show'); }
+function showSignupSuccess(msg){ document.getElementById('signupSuccessMsg').textContent=msg; document.getElementById('signupSuccess').classList.add('show'); document.getElementById('signupError').classList.remove('show'); }
+
+// ── LOGIN — calls POST /auth/login ──────────────────────────────
+async function handleLogin() {
+  const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value;
+  const btn      = document.getElementById('loginBtn');
+
+  if (!email)    { showLoginError('Please enter your email address.'); return; }
+  if (!password) { showLoginError('Please enter your password.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⏳</span> Signing in…';
+  clearLoginError();
+
+  try {
+    const res  = await fetch(`${API}/auth/login`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showLoginError(data.detail || 'Invalid email or password.');
+      return;
+    }
+
+    // Validate role matches tab selection
+    if (data.role !== selectedRole) {
+      showLoginError(`This account is registered as a ${data.role}. Please select the correct role tab.`);
+      return;
+    }
+
+    // Save session
+    localStorage.setItem('agri_user',  JSON.stringify(data));
+    localStorage.setItem('agri_token', data.access_token);
+
+    btn.innerHTML = `✅ Welcome, ${data.name.split(' ')[0]}!`;
+    setTimeout(() => {
+      window.location.href = data.role === 'farmer' ? 'farmer.html' : 'officer.html';
+    }, 700);
+
+  } catch(err) {
+    showLoginError('Cannot reach the server. Make sure the backend is running.');
+  } finally {
+    btn.disabled = false;
+    if (btn.innerHTML.includes('Signing')) btn.innerHTML = '🔐 Sign In';
+  }
+}
+
+// ── SIGNUP — calls POST /auth/register ─────────────────────────
+async function handleSignup() {
+  const name     = document.getElementById('signupName').value.trim();
+  const location = document.getElementById('signupLocation').value.trim();
+  const email    = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const password = document.getElementById('signupPassword').value;
+  const btn      = document.getElementById('signupBtn');
+
+  if (!name)              { showSignupError('Please enter your full name.'); return; }
+  if (!email)             { showSignupError('Please enter your email address.'); return; }
+  if (!/\S+@\S+\.\S+/.test(email)) { showSignupError('Please enter a valid email.'); return; }
+  if (password.length < 6) { showSignupError('Password must be at least 6 characters.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⏳</span> Creating account…';
+
+  try {
+    const res  = await fetch(`${API}/auth/register`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name, email, password, role: selectedSignupRole, location: location || 'India', language: 'en' }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showSignupError(data.detail || 'Registration failed.');
+      return;
+    }
+
+    showSignupSuccess(`Account created for ${name.split(' ')[0]}! You can now log in.`);
+    setTimeout(() => {
+      closeSignupModal();
+      openModal();
+      document.getElementById('loginEmail').value = email;
+      selectRole(selectedSignupRole);
+    }, 1500);
+
+  } catch(err) {
+    showSignupError('Cannot reach the server. Make sure the backend is running.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🌱 Create Account';
+  }
+}
+</script>
+</body>
+</html>

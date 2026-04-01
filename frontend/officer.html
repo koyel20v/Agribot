@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgriGenius – Officer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green-dark:#1a3a2a; --green-mid:#2d6a4f; --green-bright:#52b788;
+    --green-light:#b7e4c7; --green-pale:#d8f3dc; --gold:#e9c46a;
+    --red:#e63946; --red-pale:#fde8ea; --blue:#4361ee; --blue-pale:#e8ecff;
+    --cream:#fdfdf5; --white:#ffffff;
+    --text:#1a2e1e; --text-muted:#4a6555;
+    --border:rgba(82,183,136,.2); --shadow:0 4px 24px rgba(26,58,42,.1); --radius:16px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:#f0f4f1;color:var(--text);min-height:100vh;}
+
+  .topbar{background:var(--green-dark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:16px 36px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.2);}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;display:flex;align-items:center;gap:10px;}
+  .topbar-logo span{color:var(--green-bright);}
+  .topbar-right{display:flex;align-items:center;gap:18px;}
+  .officer-info{display:flex;align-items:center;gap:10px;font-size:.88rem;}
+  .officer-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green-bright),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1rem;}
+  .btn-logout-topbar{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:50px;background:rgba(230,57,70,.15);color:#ff9a9a;border:1px solid rgba(230,57,70,.3);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;}
+  .btn-logout-topbar:hover{background:rgba(230,57,70,.3);}
+  .btn-refresh{display:flex;align-items:center;gap:7px;padding:9px 18px;border-radius:50px;background:rgba(82,183,136,.15);color:var(--green-bright);border:1px solid rgba(82,183,136,.3);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .22s;font-family:'DM Sans',sans-serif;}
+  .btn-refresh:hover{background:rgba(82,183,136,.25);}
+
+  .container{max-width:1100px;margin:0 auto;padding:36px 24px;}
+
+  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+  .stat-card{background:var(--white);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);border:1px solid var(--border);display:flex;align-items:center;gap:14px;}
+  .stat-icon{font-size:1.8rem;}
+  .stat-val{font-size:1.6rem;font-weight:700;color:var(--green-dark);line-height:1;}
+  .stat-lbl{font-size:.78rem;color:var(--text-muted);margin-top:3px;}
+
+  .filters{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;align-items:center;}
+  .filter-btn{padding:8px 20px;border-radius:50px;font-size:.85rem;font-weight:600;border:1.5px solid var(--border);background:var(--white);color:var(--text-muted);cursor:pointer;transition:all .2s;}
+  .filter-btn.active,.filter-btn:hover{background:var(--green-mid);color:#fff;border-color:var(--green-mid);}
+  .search-box{flex:1;min-width:200px;max-width:320px;padding:9px 16px 9px 36px;border-radius:50px;border:1.5px solid var(--border);background:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234a6555' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center;}
+  .search-box:focus{border-color:var(--green-bright);}
+
+  .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+  .section-hdr h2{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--green-dark);}
+  .badge-count{background:var(--green-bright);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;margin-left:10px;}
+
+  .queries-list{display:flex;flex-direction:column;gap:18px;}
+  .query-card{background:var(--white);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);border:1px solid var(--border);border-left:4px solid var(--green-bright);transition:box-shadow .2s;}
+  .query-card:hover{box-shadow:0 8px 40px rgba(26,58,42,.13);}
+  .query-card.approved{border-left-color:var(--green-bright);opacity:.8;}
+  .query-card.rejected{border-left-color:var(--red);opacity:.7;}
+
+  .qcard-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+  .farmer-chip{display:flex;align-items:center;gap:7px;background:var(--green-pale);border-radius:50px;padding:5px 12px 5px 5px;font-size:.8rem;font-weight:600;color:var(--green-dark);flex-shrink:0;}
+  .farmer-chip .av{width:26px;height:26px;border-radius:50%;background:var(--green-mid);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fff;}
+  .qcard-meta{flex:1;}
+  .qcard-time{font-size:.78rem;color:var(--text-muted);}
+  .lang-tag{font-size:.72rem;background:var(--blue-pale);color:var(--blue);padding:2px 8px;border-radius:50px;font-weight:600;margin-left:6px;}
+  .src-tag{font-size:.72rem;background:var(--green-pale);color:var(--green-mid);padding:2px 8px;border-radius:50px;font-weight:600;margin-left:6px;}
+
+  .q-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:5px;}
+  .q-text{font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.45;}
+
+  .ai-answer-box{background:linear-gradient(135deg,var(--green-pale),rgba(255,255,255,.5));border:1px solid var(--green-light);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
+  .ai-answer-box .q-label{color:var(--green-mid);}
+  .ai-answer-text{font-size:.88rem;line-height:1.7;color:var(--text);white-space:pre-wrap;}
+
+  .edit-area{display:none;margin-bottom:14px;}
+  .edit-area.show{display:block;}
+  .edit-area textarea{width:100%;min-height:100px;padding:12px 14px;border:1.5px solid var(--green-bright);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);background:var(--cream);resize:vertical;outline:none;}
+
+  .qcard-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn-approve,.btn-reject,.btn-edit,.btn-save,.btn-cancel{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:50px;font-size:.85rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .btn-approve{background:var(--green-pale);color:var(--green-mid);border:1.5px solid var(--green-light);}
+  .btn-approve:hover{background:var(--green-mid);color:#fff;}
+  .btn-reject{background:var(--red-pale);color:var(--red);border:1.5px solid #f5c6cb;}
+  .btn-reject:hover{background:var(--red);color:#fff;}
+  .btn-edit{background:var(--blue-pale);color:var(--blue);border:1.5px solid #c5cdf7;}
+  .btn-edit:hover{background:var(--blue);color:#fff;}
+  .btn-save{background:var(--green-mid);color:#fff;}
+  .btn-save:hover{background:var(--green-dark);}
+  .btn-cancel{background:#f5f5f5;color:var(--text-muted);border:1.5px solid #ddd;}
+  .btn-undo{background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:.82rem;margin-left:auto;font-family:'DM Sans',sans-serif;}
+
+  .validated-banner{display:flex;align-items:center;gap:8px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:10px 16px;font-size:.85rem;font-weight:600;color:#2e7d32;}
+  .validated-banner.rejected-banner{background:var(--red-pale);border-color:#f5c6cb;color:var(--red);}
+
+  .empty-state{text-align:center;padding:60px 20px;color:var(--text-muted);}
+  .empty-state .e-icon{font-size:3.5rem;display:block;margin-bottom:14px;}
+  .empty-state h3{font-size:1.1rem;color:var(--green-dark);margin-bottom:8px;}
+
+  .loading-state{text-align:center;padding:40px;color:var(--text-muted);}
+
+  .toast{position:fixed;bottom:28px;right:28px;background:var(--green-dark);color:#fff;padding:14px 22px;border-radius:12px;font-size:.9rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:all .35s;z-index:999;}
+  .toast.show{transform:none;opacity:1;}
+
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .spin{display:inline-block;animation:spin .7s linear infinite;}
+
+  @media(max-width:700px){.stats-bar{grid-template-columns:1fr 1fr;}.topbar{padding:12px 16px;}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-logo">🌿 Agri<span>Genius</span>
+    <span style="font-size:.75rem;opacity:.5;font-family:'DM Sans';font-weight:400;">Officer Portal</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-refresh" onclick="loadQueries()">↻ Refresh</button>
+    <button class="btn-logout-topbar" onclick="handleLogout()">🚪 Sign Out</button>
+    <div class="officer-info">
+      <div class="officer-avatar">👨‍💼</div>
+      <div>
+        <div style="font-weight:600;" id="officerName">Officer</div>
+        <div style="font-size:.75rem;opacity:.6;" id="officerTitle">Agriculture Officer</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-icon">📋</div><div><div class="stat-val" id="totalCount">0</div><div class="stat-lbl">Total Queries</div></div></div>
+    <div class="stat-card"><div class="stat-icon">⏳</div><div><div class="stat-val" id="pendingCount">0</div><div class="stat-lbl">Pending</div></div></div>
+    <div class="stat-card"><div class="stat-icon">✅</div><div><div class="stat-val" id="approvedCount">0</div><div class="stat-lbl">Approved</div></div></div>
+    <div class="stat-card"><div class="stat-icon">❌</div><div><div class="stat-val" id="rejectedCount">0</div><div class="stat-lbl">Rejected</div></div></div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('pending',this)">⏳ Pending</button>
+    <button class="filter-btn" onclick="setFilter('approved',this)">✅ Approved</button>
+    <button class="filter-btn" onclick="setFilter('rejected',this)">❌ Rejected</button>
+    <input type="text" class="search-box" placeholder="Search queries…" oninput="searchQueries(this.value)" />
+  </div>
+
+  <div class="section-hdr">
+    <h2>Farmer Queries <span class="badge-count" id="visibleCount">0</span></h2>
+  </div>
+  <div class="queries-list" id="queriesList">
+    <div class="loading-state"><span class="spin">⏳</span> Loading queries from backend…</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:8000';
+
+// ── STATE ─────────────────────────────────────────────────────────
+// Declare first — authGuard() will populate currentToken.
+let currentToken = null;
+
+// ── AUTH GUARD ────────────────────────────────────────────────────
+// FIX: validates the token string before setting it.
+// If token is the literal string "null"/"undefined" or empty,
+// it means localStorage was corrupted — force re-login.
+(function authGuard() {
+  const storedUser  = localStorage.getItem('agri_user');
+  const storedToken = localStorage.getItem('agri_token');
+
+  if (!storedUser || !storedToken) {
+    window.location.replace('index.html');
+    return;
+  }
+
+  // FIX: reject stringified null/undefined tokens
+  if (storedToken === 'null' || storedToken === 'undefined' || storedToken.trim() === '') {
+    localStorage.clear();
+    window.location.replace('index.html');
+    return;
+  }
+
+  try {
+    const user = JSON.parse(storedUser);
+    if (!user || user.role !== 'officer') {
+      localStorage.clear();
+      window.location.replace('index.html');
+      return;
+    }
+
+    // ✅ Valid officer session
+    currentToken = storedToken;
+    document.getElementById('officerName').textContent  = user.name     || 'Officer';
+    document.getElementById('officerTitle').textContent = `Agriculture Officer · ${user.location || 'India'}`;
+
+  } catch (e) {
+    localStorage.clear();
+    window.location.replace('index.html');
+  }
+})();
+
+function handleLogout() {
+  if (!confirm('Are you sure you want to sign out?')) return;
+  localStorage.clear();
+  window.location.href = 'index.html';
+}
+
+// ── STATE ─────────────────────────────────────────────────────────
+let queries       = [];
+let currentFilter = 'all';
+let searchTerm    = '';
+
+// ── LOAD QUERIES — GET /queries ───────────────────────────────────
+async function loadQueries() {
+  // FIX: guard against null token
+  if (!currentToken) {
+    window.location.replace('index.html');
+    return;
+  }
+
+  document.getElementById('queriesList').innerHTML =
+    '<div class="loading-state"><span class="spin">⏳</span> Loading…</div>';
+
+  try {
+    const res = await fetch(`${API}/queries`, {
+      headers: { 'Authorization': `Bearer ${currentToken}` }
+    });
+
+    // FIX: 401 means token expired — force re-login
+    if (res.status === 401) {
+      localStorage.clear();
+      window.location.replace('index.html');
+      return;
+    }
+
+    if (!res.ok) {
+      renderError('Failed to load queries. Are you logged in as an officer?');
+      return;
+    }
+
+    queries = await res.json();
+    renderQueries();
+
+  } catch (e) {
+    renderError('Cannot reach the server. Make sure the backend is running on port 8000.');
+  }
+}
+
+function renderError(msg) {
+  document.getElementById('queriesList').innerHTML =
+    `<div class="empty-state"><span class="e-icon">⚠️</span><h3>Error</h3><p>${msg}</p></div>`;
+}
+
+// ── STATS ─────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('totalCount').textContent    = queries.length;
+  document.getElementById('pendingCount').textContent  = queries.filter(q => q.status === 'pending').length;
+  document.getElementById('approvedCount').textContent = queries.filter(q => q.status === 'approved').length;
+  document.getElementById('rejectedCount').textContent = queries.filter(q => q.status === 'rejected').length;
+}
+
+// ── FILTER + SEARCH ───────────────────────────────────────────────
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQueries();
+}
+function searchQueries(val) { searchTerm = val.toLowerCase(); renderQueries(); }
+
+// ── RENDER ────────────────────────────────────────────────────────
+function renderQueries() {
+  const filtered = queries.filter(q => {
+    const matchFilter = currentFilter === 'all' || q.status === currentFilter;
+    const matchSearch = !searchTerm
+      || q.question.toLowerCase().includes(searchTerm)
+      || (q.farmer_name || '').toLowerCase().includes(searchTerm);
+    return matchFilter && matchSearch;
+  });
+
+  document.getElementById('visibleCount').textContent = filtered.length;
+  updateStats();
+
+  const list = document.getElementById('queriesList');
+
+  if (!queries.length) {
+    list.innerHTML = `<div class="empty-state"><span class="e-icon">🌾</span><h3>No queries yet</h3><p>Queries will appear here as farmers submit their questions.</p></div>`;
+    return;
+  }
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state"><span class="e-icon">📭</span><h3>No matching queries</h3><p>Try adjusting your filter or search term.</p></div>`;
+    return;
+  }
+
+  const langMap = { en: 'English', hi: 'Hindi', bn: 'Bengali' };
+  const srcMap  = { kg: '🧠 KG', web: '🌐 Web', none: '💡 LLM' };
+
+  list.innerHTML = filtered.map(q => {
+    const displayAnswer = q.validated_answer || q.ai_response || '';
+    const isValidated   = q.status !== 'pending';
+
+    return `
+    <div class="query-card ${isValidated ? q.status : ''}" id="card-${q.query_id}">
+      <div class="qcard-header">
+        <div class="farmer-chip">
+          <div class="av">${(q.farmer_name || 'F')[0].toUpperCase()}</div>
+          ${q.farmer_name || 'Unknown'}
+        </div>
+        <div class="qcard-meta">
+          <span class="qcard-time">${q.created_at}</span>
+          <span class="lang-tag">${langMap[q.language] || q.language || 'en'}</span>
+          <span class="src-tag">${srcMap[q.source] || q.source}</span>
+          ${q.location ? `<span class="lang-tag" style="background:#f0f0ff;color:#555;">📍 ${q.location}</span>` : ''}
+        </div>
+        ${q.status === 'approved' ? '<span style="color:#2e7d32;font-size:1.2rem;">✅</span>'
+          : q.status === 'rejected' ? '<span style="color:var(--red);font-size:1.2rem;">❌</span>'
+          : '<span style="color:var(--gold);font-size:1.2rem;">⏳</span>'}
+      </div>
+
+      <div class="q-label">Farmer's Question</div>
+      <div class="q-text">${q.question}</div>
+
+      <div class="ai-answer-box">
+        <div class="q-label">🤖 AI-Generated Answer</div>
+        <div class="ai-answer-text" id="answer-${q.query_id}">${displayAnswer}</div>
+      </div>
+
+      <div class="edit-area" id="edit-${q.query_id}">
+        <textarea id="editta-${q.query_id}">${displayAnswer}</textarea>
+      </div>
+
+      ${isValidated
+        ? `<div class="validated-banner ${q.status === 'rejected' ? 'rejected-banner' : ''}">
+             ${q.status === 'approved' ? '✅ Approved and sent back to farmer' : '❌ Rejected — answer marked as inaccurate'}
+             <button class="btn-undo" onclick="undoAction(${q.query_id})">↩ Undo</button>
+           </div>`
+        : `<div class="qcard-actions">
+             <button class="btn-approve" onclick="approveQuery(${q.query_id})">✅ Approve</button>
+             <button class="btn-reject"  onclick="rejectQuery(${q.query_id})">❌ Reject</button>
+             <button class="btn-edit"    onclick="toggleEdit(${q.query_id})">✏️ Edit Answer</button>
+             <button class="btn-save"   id="save-${q.query_id}"   onclick="saveEdit(${q.query_id})"   style="display:none;">💾 Save</button>
+             <button class="btn-cancel" id="cancel-${q.query_id}" onclick="cancelEdit(${q.query_id})" style="display:none;">Cancel</button>
+           </div>`}
+    </div>`;
+  }).join('');
+}
+
+// ── OFFICER ACTIONS ───────────────────────────────────────────────
+async function approveQuery(id) {
+  const res = await apiPost(`/queries/${id}/approve`);
+  if (res) { updateLocal(id, 'approved'); showToast('✅ Query approved.'); }
+}
+
+async function rejectQuery(id) {
+  const res = await apiPost(`/queries/${id}/reject`);
+  if (res) { updateLocal(id, 'rejected'); showToast('❌ Query rejected.'); }
+}
+
+async function undoAction(id) {
+  const res = await apiPost(`/queries/${id}/undo`);
+  if (res) { updateLocal(id, 'pending'); showToast('↩ Reset to pending.'); }
+}
+
+function updateLocal(id, newStatus) {
+  const q = queries.find(x => x.query_id === id);
+  if (q) q.status = newStatus;
+  renderQueries();
+}
+
+function toggleEdit(id) {
+  document.getElementById(`edit-${id}`).classList.add('show');
+  document.getElementById(`save-${id}`).style.display   = 'inline-flex';
+  document.getElementById(`cancel-${id}`).style.display = 'inline-flex';
+  document.getElementById(`editta-${id}`).value = document.getElementById(`answer-${id}`).textContent;
+  document.querySelectorAll(`#card-${id} .btn-approve, #card-${id} .btn-reject, #card-${id} .btn-edit`)
+    .forEach(b => b.style.display = 'none');
+}
+
+function cancelEdit(id) {
+  document.getElementById(`edit-${id}`).classList.remove('show');
+  document.getElementById(`save-${id}`).style.display   = 'none';
+  document.getElementById(`cancel-${id}`).style.display = 'none';
+  document.querySelectorAll(`#card-${id} .btn-approve, #card-${id} .btn-reject, #card-${id} .btn-edit`)
+    .forEach(b => b.style.display = 'inline-flex');
+}
+
+async function saveEdit(id) {
+  const newAnswer = document.getElementById(`editta-${id}`).value.trim();
+  if (!newAnswer) { showToast('⚠️ Answer cannot be empty.'); return; }
+
+  try {
+    const res = await fetch(`${API}/queries/${id}/answer`, {
+      method:  'PUT',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${currentToken}`,
+      },
+      body: JSON.stringify({ answer: newAnswer }),
+    });
+
+    if (res.status === 401) { localStorage.clear(); window.location.replace('index.html'); return; }
+    if (!res.ok) { showToast('❌ Failed to save.'); return; }
+
+    const q = queries.find(x => x.query_id === id);
+    if (q) q.validated_answer = newAnswer;
+    document.getElementById(`answer-${id}`).textContent = newAnswer;
+    cancelEdit(id);
+    showToast('✏️ Answer saved.');
+
+  } catch (e) {
+    showToast('❌ Server error saving answer.');
+  }
+}
+
+// ── API HELPER ────────────────────────────────────────────────────
+async function apiPost(path) {
+  // FIX: guard token here too
+  if (!currentToken) { window.location.replace('index.html'); return null; }
+  try {
+    const res = await fetch(`${API}${path}`, {
+      method:  'POST',
+      headers: { 'Authorization': `Bearer ${currentToken}` },
+    });
+    if (res.status === 401) { localStorage.clear(); window.location.replace('index.html'); return null; }
+    if (!res.ok) { showToast('❌ Action failed. Please try again.'); return null; }
+    return await res.json();
+  } catch (e) {
+    showToast('❌ Cannot reach server.');
+    return null;
+  }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── LIVE REFRESH every 30s ────────────────────────────────────────
+// FIX: only start interval AFTER auth guard confirms token is valid.
+// Also increased to 30s to avoid hammering the server.
+setInterval(loadQueries, 30000);
+
+// ── INIT ──────────────────────────────────────────────────────────
+// FIX: loadQueries() is called AFTER authGuard() sets currentToken.
+// It also checks currentToken internally before making any fetch call.
+loadQueries();
+</script>
+</body>
+</html>

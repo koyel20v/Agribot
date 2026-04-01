@@ -1,0 +1,401 @@
+head_entity,head_entity_type,relation,tail_entity,tail_entity_type
+Blockchain Technology Adoption,Agri_Method,Used_For,Agriculture Supply Chain,Agri_Process
+Mahak Sharma,Person,Conjunction,Ashwaq Al Khalil,Person
+Ashwaq Al Khalil,Person,Conjunction,Tugrul Daim,Person
+The Netherlands,Location,Conjunction,United States,Location
+United States,Location,Conjunction,Saudi Arabia,Location
+Saudi Arabia,Location,Conjunction,India,Location
+Interpretive Structural Modeling—Decision Making Trial and Evaluation Laboratory,ML_Model,Used_For,identifying the factors and ranking them based on their extent of influence,Agri_Process
+policies,Policy,Helps_In,BCT adoption in the agriculture supply chain,Agri_Process
+farmers,Person,Used_For,Agricultural supply chain,Agri_Process
+agri-produce,Crop,Used_For,supply chain partners,Organization
+technology adoption in agri-SC,Agri_Method,Helps_In,farmer’s life,Other
+30 July 2021,Date_and_Time,Conjunction,22 December 2021,Date_and_Time
+22 December 2021,Date_and_Time,Conjunction,12 July 2022,Date_and_Time
+12 July 2022,Date_and_Time,Conjunction,14 July 2022,Date_and_Time
+14 July 2022,Date_and_Time,Conjunction,10 August 2022,Date_and_Time
+10 August 2022,Date_and_Time,Conjunction,7 August 2024,Date_and_Time
+Mahak Sharma,Person,Origin_Of,"Birla Institute of Management Technology, Noida 201306, India",Location
+Ashwaq Al Khalil,Person,Origin_Of,"Portland State University, Portland, OR 97201 USA",Location
+Tugrul Daim,Person,Origin_Of,"Portland State University, Portland, OR 97201 USA",Location
+Tugrul Daim,Person,Origin_Of,"Chaoyang University of Technology, Taichung City 41281, Taiwan",Location
+Tugrul Daim,Person,Origin_Of,"Yildiz Technical University, Istanbul 34349, Türkiye",Location
+technology adoption,Agri_Method,Helps_In,agriculture,Agri_Process
+technology adoption,Agri_Method,Used_For,sowing of seeds,Agri_Process
+technology adoption,Agri_Method,Used_For,harvesting of crop,Agri_Process
+food sector,Food_Item,Includes,supply chain management,Agri_Process
+food’s quality,Food_Item,Caused_By,bounded shelf life,Duration
+agricultural food products,Food_Item,Includes,food wastage,Agri_Waste
+USA,Location,Caused_By,food wastage,Agri_Waste
+China,Location,Caused_By,food wastage,Agri_Waste
+food wastage,Agri_Waste,Caused_By,agricultural nonpoint source pollution,Agri_Pollution
+food wastage,Agri_Waste,Caused_By,greenhouse gas emissions,Agri_Pollution
+U.K. supermarkets,Organization,Caused_By,food waste,Agri_Waste
+food waste,Agri_Waste,Caused_By,lack of transparency,Other
+innovative technology,Technology,Helps_In,food waste,Agri_Waste
+IEEE,Organization,Includes,https://www.ieee.org/publications/rights/index.html,Citation
+blockchain technology,Technology,Used_For,supply chain management of agri-produce,Agri_Process
+blockchain technology,Technology,Used_For,food traceability in agri-SCs,Agri_Process
+Hyperledger fabric,Technology,Used_For,tracking foods,Agri_Process
+Amazon,Organization,Used_For,tracking foods,Agri_Process
+Walmart,Organization,Used_For,tracking foods,Agri_Process
+Carrefour1,Organization,Used_For,"tracking its meat, milk, and fruit production",Agri_Process
+Nestle2,Organization,Used_For,blockchain technology,Technology
+blockchain technology,Technology,Helps_In,mitigate problems faced by stakeholders due to poor processes and primitive technologies,Agri_Process
+SHARMA et al.,Citation,Includes,blockchain technology,Technology
+$210.2 million in 2016,Money,Includes,BCT market growth,Other
+$2312.5 million by 2021,Money,Includes,BCT market growth,Other
+$45 million in 2018,Money,Includes,growth in SC management,Other
+$3314.6 million by 2023,Money,Includes,growth in SC management,Other
+BCT,Technology,Helps_In,mitigate problems faced by stakeholders due to poor processes and primitive technologies,Agri_Process
+BCT,Technology,Helps_In,"manage demand and supply of available resource, product shelf-life, and reduce inventory costs",Agri_Process
+BCT,Technology,Helps_In,mitigating related risks,Agri_Process
+BCT,Technology,Helps_In,provide better and synchronized communication among supply chain stakeholders,Agri_Process
+The Netherlands,Location,Used_For,invest over 200 million Euro and initiated in launching EU Blockchain Observatory and Forum,Money
+Oregon farmers,Person,Used_For,use BCT to track crops,Technology
+Saudi Arabia,Location,Caused_By,water stress,Natural_Disaster
+Saudi Arabia,Location,Helps_In,"smart irrigation, asset monitoring, and smart farming",Agri_Process
+Indian agri-SC,Agri_Process,Caused_By,"high number of intermediaries, poor infrastructure applied for preserving the crops",Agri_Waste
+BCT,Technology,Helps_In,Indian agri-SC,Agri_Process
+India,Location,Origin_Of,BCT,Technology
+Saudi Arabia,Location,Origin_Of,BCT,Technology
+Interpretive Structural Modeling—Decision-making trial and evaluation laboratory (ISM-DEMATEL),ML_Model,Used_For,BCT adoption,Agri_Process
+India,Location,Origin_Of,Interpretive Structural Modeling—Decision-making trial and evaluation laboratory (ISM-DEMATEL),ML_Model
+Oregon,Location,Origin_Of,Interpretive Structural Modeling—Decision-making trial and evaluation laboratory (ISM-DEMATEL),ML_Model
+The Netherlands,Location,Origin_Of,Interpretive Structural Modeling—Decision-making trial and evaluation laboratory (ISM-DEMATEL),ML_Model
+Saudi Arabia,Location,Origin_Of,Interpretive Structural Modeling—Decision-making trial and evaluation laboratory (ISM-DEMATEL),ML_Model
+BCT,Technology,Used_For,agri-SC,Agri_Process
+Blockchain Technology,Technology,Used_For,agri-SC,Agri_Process
+Blockchain Technology,Technology,Includes,Internet of Things (IoT),Technology
+Blockchain Technology,Technology,Helps_In,transparency,Other
+Blockchain Technology,Technology,Helps_In,security,Other
+Blockchain Technology,Technology,Helps_In,cost reduction,Other
+Satoshi Nakamoto,Person,Used_For,real application of blockchain technology,Technology
+Blockchain Technology,Technology,Includes,cryptography,Other
+Blockchain Technology,Technology,Helps_In,decentralization,Other
+Blockchain Technology,Technology,Helps_In,immutability,Other
+Blockchain Technology,Technology,Helps_In,irreversibility,Other
+Industry 4.0,Technology,Includes,Enterprise Resource planning,Technology
+Industry 4.0,Technology,Includes,Manufacturing Execution systems,Technology
+blockchain technology,Technology,Used_For,storage of digital records,Agri_Process
+blockchain technology,Technology,Used_For,property transfer,Agri_Process
+blockchain technology,Technology,Used_For,online tracking and verification,Agri_Process
+blockchain technology,Technology,Used_For,food supply chain,Agri_Process
+blockchain technology,Technology,Used_For,Precision Agriculture,Agri_Process
+Precision agriculture,Agri_Process,Includes,remote sensing,Technology
+Precision agriculture,Agri_Process,Includes,geographical information system,Technology
+Precision agriculture,Agri_Process,Includes,satellite technology,Technology
+Precision agriculture,Agri_Process,Includes,cloud computing,Technology
+Precision agriculture,Agri_Process,Includes,AI,Technology
+Precision agriculture,Agri_Process,Includes,mobile technology,Technology
+Precision agriculture,Agri_Process,Includes,weather,Weather
+Precision agriculture,Agri_Process,Includes,soil conditions,Soil
+Precision agriculture,Agri_Process,Includes,market information,Other
+Precision agriculture,Agri_Process,Includes,unmanned aerial vehicles,Technology
+Precision agriculture,Agri_Process,Includes,robots,Technology
+Smart Agriculture,Agri_Process,Includes,data and information,Other
+Smart Agriculture,Agri_Process,Includes,ICT resources,Technology
+Smart Agriculture,Agri_Process,Includes,IoT,Technology
+Smart Agriculture,Agri_Process,Includes,data and information,Other
+comprehensive and secure systems,Agri_Method,Used_For,manage data and information,Agri_Process
+Smart farming,Agri_Method,Includes,internal data and external data,Other_Quantity
+Blockchain technology,Technology,Used_For,enhanced data security,Agri_Process
+Blockchain technology,Technology,Helps_In,agriculture,Other
+Dr B C Roy Engineering College,Organization,Coreference_Of,Authorized licensed use,Other
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Coreference_Of,Downloaded,Event
+blockchain technology,Technology,Used_For,automated execution of actions,Agri_Process
+AgriDigital,Organization,Used_For,executing commodity transactions,Agri_Process
+blockchain technology,Technology,Used_For,transaction settlements,Agri_Process
+blockchain platform,Technology,Helps_In,real-time matching of data,Agri_Process
+blockchain technology,Technology,Used_For,enhancing food security,Agri_Process
+blockchain applications,Technology,Used_For,distribution of foods,Agri_Process
+Blockchain infrastructure,Technology,Used_For,record data throughout all the steps in the food production value chain,Agri_Process
+Data analytics,Technology,Used_For,analysis of the data,Agri_Process
+Insurance facilities,Agri_Method,Helps_In,hedge against potential risks,Agri_Process
+farmers,Person,Caused_By,prohibitive costs,Money
+Blockchain,Technology,Helps_In,direct transaction,Agri_Process
+Blockchain,Technology,Used_For,Data Exchange,Agri_Process
+Blockchain,Technology,Used_For,Farm Inventory Management,Agri_Process
+farmers,Person,Used_For,proactive monitoring of crops and harvest,Agri_Process
+farmers,Person,Used_For,high prevision sensors,Technology
+CO2 concentration,Chemical,Used_For,maintain optimal conditions of farm inventory,Agri_Process
+Blockchain,Technology,Used_For,Agriculture Supply Chain,Agri_Process
+blockchain,Technology,Used_For,supply chain,Agri_Process
+blockchain,Technology,Helps_In,food quality and safety,Agri_Process
+blockchain,Technology,Helps_In,traceability,Agri_Process
+blockchain,Technology,Used_For,verification of agricultural inputs,Agri_Process
+blockchain,Technology,Used_For,verification of finished products,Agri_Process
+blockchain,Technology,Used_For,detecting fraud,Agri_Process
+blockchain,Technology,Used_For,interaction between the producer and the consumer,Agri_Process
+blockchain,Technology,Used_For,eliminating unfair pricing practices,Agri_Process
+blockchain,Technology,Used_For,setting prices for both fresh produce and finished goods,Agri_Process
+blockchain,Technology,Used_For,providing farmers with real time and accurate information about prevailing market conditions,Agri_Process
+Blockchain,Technology,Used_For,provide farmers with real time and accurate information about prevailing market conditions,Agri_Process
+mobile phones,Technology,Used_For,provide farmers with real time and accurate information about prevailing market conditions,Agri_Process
+Agricultural Subsidies,Policy,Used_For,enhance food production,Agri_Process
+Agricultural Subsidies,Policy,Used_For,food security,Agri_Process
+Dr B C Roy Engineering College,Organization,Includes,Authorized licensed use,Other
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Used_For,Downloaded,Event
+blockchain-linked database,Technology,Helps_In,implementation of smart contracts,Agri_Process
+blockchain,Technology,Used_For,payment system,Agri_Process
+United States,Location,Origin_Of,federal government,Organization
+federal government,Organization,Used_For,subsidies,Money
+subsidies,Money,Used_For,farmers,Person
+farmers,Person,Includes,"corn, soybeans, wheat, and livestock",Crop
+blockchain technologies,Technology,Used_For,remittance of agricultural subsidies,Agri_Process
+Crowdfunding,Agri_Process,Used_For,Agriculture-Based Projects,Agri_Process
+Blockchain,Technology,Used_For,crowdfunding,Agri_Process
+EthicHub,Organization,Used_For,blockchain-powered peer-to-peer lending systems,Technology
+EthicHub,Organization,Used_For,peer-to-peer lending systems,Technology
+Ethereum smart contracts,Technology,Used_For,End-to-End Crop Traceability,Agri_Process
+Blockchain-powered IPFS,Technology,Helps_In,storage and sharing of data and information,Agri_Process
+Blockchain-powered IPFS,Technology,Used_For,greater control of the crop,Agri_Process
+Ethereum smart contracts,Technology,Used_For,end-to-end traceability,Agri_Process
+Blockchain technology,Technology,Helps_In,"verifiability of the type, quality, and origin of such products",Agri_Process
+Government and land renting agencies,Organization,Used_For,blockchain-powered systems,Technology
+blockchain-powered systems,Technology,Used_For,land documentation,Agri_Process
+blockchain technology,Technology,Helps_In,land management and governance,Agri_Process
+blockchain-powered ledgers,Technology,Used_For,digitize land information,Agri_Process
+Blockchain,Technology,Used_For,enhance feed safety and quality,Agri_Process
+Blockchain,Technology,Used_For,real-time tracing of animal feed and ingredients,Agri_Process
+Internal Livestock Research Institute,Organization,Helps_In,promoting blockchain technology adoption,Agri_Process
+Waste-to-energy enterprises,Organization,Used_For,trade the bio-waste,Agri_Waste
+bio-waste,Agri_Waste,Used_For,energy,Natural_Resource
+blockchain-powered waste collection system,Technology,Used_For,bio-waste,Agri_Waste
+blockchain-based waste collection system,Technology,Origin_Of,China,Location
+renewable energy approaches,Technology,Helps_In,future energy demands,Other
+renewable energy approaches,Technology,Helps_In,climate change,Natural_Disaster
+Dr B C Roy Engineering College,Organization,Other,"April 22,2025 at 06:37:00 UTC",Date_and_Time
+block chain technology,Technology,Helps_In,multidisciplinary distribution channels and trade,Agri_Process
+block chain technology,Technology,Helps_In,sustainability,Agri_Process
+block chain technology,Technology,Helps_In,supply chain,Agri_Process
+ISM,ML_Model,Used_For,understand system actuators and drives,Agri_Process
+blockchain,Technology,Helps_In,enhance the entire supply chain of agriculture,Agri_Process
+blockchain,Technology,Helps_In,developing food chain transparency and quality of life,Agri_Process
+ISM and DEMATEL method,ML_Model,Used_For,research,Agri_Process
+February 2019,Date_and_Time,Conjunction,March 2021,Date_and_Time
+The Netherlands,Location,Conjunction,India,Location
+India,Location,Conjunction,Saudi Arabia,Location
+Saudi Arabia,Location,Conjunction,Oregon,Location
+ISM,ML_Model,Used_For,rank the factors,Agri_Process
+DEMATEL,ML_Model,Used_For,rank the factors,Agri_Process
+phenomenology,Agri_Method,Used_For,case study research,Agri_Process
+grounded theory,Agri_Method,Used_For,narrative,Agri_Process
+multicriteria decision-making techniques,Agri_Method,Used_For,sample organizations,Organization
+MCDM and ISM,Agri_Method,Used_For,expert opinions,Person
+ISM,Agri_Method,Used_For,interactive learning method,Agri_Process
+ISM,Agri_Method,Used_For,blockchain adoption,Agri_Process
+ISM-MICMAC methodology,Agri_Method,Used_For,complex problems,Agri_Process
+ISM-MICMAC methodology,Agri_Method,Used_For,systems elements,Agri_Process
+"April 22,2025",Date_and_Time,Used_For,IEEE Xplore,Citation
+ISM-DEMATEL,Agri_Method,Used_For,e-waste management practices,Agri_Process
+ISM-DEMATEL,Agri_Method,Used_For,blockchain enabled traceability,Agri_Process
+ISM,Agri_Method,Used_For,investigate their hierarchy,Agri_Process
+DEMATEL,Agri_Method,Used_For,categorize factors,Agri_Process
+smart irrigation,Agri_Method,Used_For,agri-SC,Agri_Process
+India,Location,Origin_Of,ISM analysis,Agri_Method
+The Netherlands,Location,Origin_Of,relevant factors,Agri_Method
+Oregon,Location,Origin_Of,relevant factors,Agri_Method
+Saudi Arabia,Location,Origin_Of,relevant factors,Agri_Method
+smart irrigation,Agri_Method,Used_For,cause group factor,Agri_Process
+Weather monitoring,Agri_Method,Used_For,cause group factor,Agri_Process
+asset monitoring,Agri_Method,Used_For,cause group factor,Agri_Process
+crop and soil monitoring,Agri_Method,Used_For,cause group factor,Agri_Process
+livestock monitoring,Agri_Method,Used_For,cause group factor,Agri_Process
+Smart farming,Agri_Method,Used_For,effect group,Agri_Process
+Fair financial audits,Agri_Method,Used_For,dependent factors,Agri_Process
+logistic maintenance,Agri_Method,Used_For,dependent factors,Agri_Process
+SHARMA et al.,Citation,Includes,BLOCKCHAIN TECHNOLOGY ADOPTION: MULTINATIONAL ANALYSIS OF THE AGRICULTURE SUPPLY CHAIN,Agri_Method
+India,Location,Origin_Of,Quality of life,Other
+Netherlands,Location,Origin_Of,crop and soil monitoring,Agri_Process
+Netherlands,Location,Origin_Of,smart irrigation,Agri_Process
+crop and soil monitoring,Agri_Process,Helps_In,Agriculture,Other
+smart irrigation,Agri_Process,Helps_In,Agriculture,Other
+Weather monitoring,Weather,Helps_In,Agriculture,Other
+livestock monitoring,Agri_Process,Helps_In,Agriculture,Other
+Smart farming,Agri_Method,Helps_In,Agriculture,Other
+logistic maintenance,Agri_Process,Helps_In,Agriculture,Other
+Dr B C Roy Engineering College,Organization,Includes,ISM ANALYSIS FORFACTORS INFLUENCING BCT ADOPTION,Agri_Method
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Used_For,Downloaded,Agri_Process
+IEEE TRANSACTIONS ON ENGINEERING MANAGEMENT,Citation,Includes,"VOL. 71, 2024",Date_and_Time
+Saudi Arabia,Location,Includes,ISM Digraph,Agri_Method
+Oregon,Location,Includes,ISM Digraph,Agri_Method
+BLOCKCHAIN TECHNOLOGY,Technology,Used_For,AGRICULTURE SUPPLY CHAIN,Agri_Process
+India,Location,Origin_Of,MICMAC analysis,ML_Model
+MICMAC Netherlands,ML_Model,Origin_Of,Netherlands,Location
+DEMATEL ANALYSIS,ML_Model,Used_For,FACTOR INFLUENCING BCT ADOPTION,Agri_Process
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Coreference_Of,Downloaded,Event
+Dr B C Roy Engineering College,Organization,Includes,Authorized licensed use,Policy
+Saudi Arabia,Location,Origin_Of,ISM analysis,Agri_Method
+Smart irrigation,Agri_Method,Used_For,crop and soil monitoring,Agri_Process
+weather monitoring,Agri_Method,Used_For,crop and soil monitoring,Agri_Process
+livestock monitoring,Agri_Method,Used_For,asset monitoring,Agri_Process
+smart farming,Agri_Method,Used_For,fair financial audits,Agri_Process
+food chain transparency,Agri_Process,Helps_In,Quality of life,Other
+MICMAC analysis,Agri_Method,Used_For,DEMATEL analysis,Agri_Method
+logistics maintenance,Agri_Process,Helps_In,asset monitoring,Agri_Process
+SHARMA et al.,Citation,Includes,BLOCKCHAIN TECHNOLOGY ADOPTION: MULTINATIONAL ANALYSIS OF THE AGRICULTURE SUPPLY CHAIN,Event
+BLOCKCHAIN TECHNOLOGY ADOPTION: MULTINATIONAL ANALYSIS OF THE AGRICULTURE SUPPLY CHAIN,Event,Origin_Of,India,Location
+BLOCKCHAIN TECHNOLOGY ADOPTION: MULTINATIONAL ANALYSIS OF THE AGRICULTURE SUPPLY CHAIN,Event,Origin_Of,Netherlands,Location
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Used_For,Downloaded,Agri_Process
+Dr B C Roy Engineering College,Organization,Used_For,Authorized licensed use,Agri_Process
+crop and soil monitoring,Agri_Process,Conjunction,smart farming,Agri_Method
+smart farming,Agri_Method,Conjunction,weather monitoring,Agri_Process
+asset monitoring,Agri_Process,Conjunction,Smart irrigation,Agri_Method
+Smart irrigation,Agri_Method,Conjunction,food chain transparency,Agri_Process
+food chain transparency,Agri_Process,Conjunction,livestock monitoring,Agri_Process
+"April 22,2025",Date_and_Time,None,06:37:00 UTC,Date_and_Time
+Oregon,Location,None,Saudi Arabia,Location
+BLOCKCHAIN TECHNOLOGY,Technology,Used_For,precision agriculture,Agri_Process
+BLOCKCHAIN TECHNOLOGY,Technology,Used_For,smart farming,Agri_Process
+BLOCKCHAIN TECHNOLOGY,Technology,Used_For,faster and reliable commodity transactions and insurance facilities,Agri_Process
+BLOCKCHAIN TECHNOLOGY,Technology,Used_For,better farm inventory management,Agri_Process
+BLOCKCHAIN TECHNOLOGY,Technology,Helps_In,permissionless equipment processing,Agri_Process
+BLOCKCHAIN TECHNOLOGY,Technology,Helps_In,transfer of value based on the assets,Agri_Process
+BLOCKCHAIN TECHNOLOGY,Technology,Helps_In,agri-SC resilience strategies,Agri_Process
+India,Location,Origin_Of,permissionless equipment processing,Agri_Process
+SHARMA et al.,Citation,Includes,BLOCKCHAIN TECHNOLOGY ADOPTION: MULTINATIONAL ANALYSIS OF THE AGRICULTURE SUPPLY CHAIN,Event
+BCT,Technology,Helps_In,agri-SC resilience strategies,Agri_Process
+Smart irrigation,Agri_Method,Helps_In,farmers,Person
+Smart irrigation,Agri_Method,Used_For,real-time monitoring and control of soil moisture,Agri_Process
+Smart irrigation sensors,Technology,Helps_In,farmer,Person
+United Nation’s Food and Agricultural Organization,Organization,Includes,e-agriculture,Agri_Method
+BCT,Technology,Helps_In,"understanding seed provenance, fertilizers used, and crop location",Agri_Process
+Smart farming,Agri_Method,Helps_In,tracing usage of pesticides and fertilizers on farming crops,Agri_Process
+BCT,Technology,Helps_In,agricultural robots,Technology
+IoT based sensor units,Technology,Used_For,capture detail specifications for irrigation,Agri_Process
+precision irrigation,Agri_Method,Includes,sensors and networking units,Technology
+irrigation,Agri_Process,Includes,crop temperature,Temp
+irrigation,Agri_Process,Includes,yield humidity,Humidity
+irrigation,Agri_Process,Includes,amount of water,Quantity
+smart irrigation,Agri_Method,Helps_In,manage the scarcity of essential resources,Agri_Process
+smart irrigation,Agri_Method,Helps_In,get superior yields,Agri_Process
+BCT,Technology,Helps_In,secured network for buying and selling products,Agri_Process
+BCT,Technology,Helps_In,logistics management,Agri_Process
+BCT,Technology,Used_For,crop and soil monitoring,Agri_Process
+BCT,Technology,Used_For,analyzing real-time water contamination’s risk,Agri_Process
+BCT,Technology,Used_For,fertilization and irrigation,Agri_Process
+BCT-based monitoring systems,Technology,Used_For,crop and soil monitoring,Agri_Process
+BCT-based system,Technology,Used_For,"analyze hydraulic system data, soil data, agro-climatic data",Agri_Process
+BCT-based system,Technology,Helps_In,irrigation scheduling for food production,Agri_Process
+BCT,Technology,Used_For,weather monitoring,Agri_Process
+vehicular ad-hoc networks vehicles,Technology,Used_For,real time data exchange,Agri_Process
+"weather condition, atmosphere humidity, road status, trafﬁc information",Weather,Helps_In,safeguard the crop in adverse and harsh weather conditions,Agri_Process
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Coreference_Of,Downloaded,Event
+Dr B C Roy Engineering College,Organization,Includes,Authorized licensed use,Policy
+blockchain assisted smart irrigation,Technology,Used_For,adoption of technology,Agri_Process
+India,Location,Origin_Of,blockchain assisted smart irrigation,Technology
+Saudi Arabia,Location,Origin_Of,blockchain assisted smart irrigation,Technology
+Oregon,Location,Origin_Of,fair ﬁnancial audits,Agri_Process
+Crop and soil monitoring,Agri_Process,Helps_In,farm management,Agri_Process
+BCT assisted real-time information,Technology,Used_For,water contamination,Agri_Pollution
+BCT assisted real-time information,Technology,Used_For,land condition,Field_Area
+BCT-assisted livestock monitoring,Technology,Helps_In,crop safety,Agri_Process
+BCT-assisted livestock monitoring,Technology,Helps_In,farm management,Agri_Process
+The Netherlands,Location,Origin_Of,BCT-assisted livestock monitoring,Technology
+Oregon,Location,Origin_Of,BCT-assisted livestock monitoring,Technology
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Coreference_Of,Downloaded,Event
+BLOCKCHAIN TECHNOLOGY,Technology,Used_For,AGRICULTURE SUPPLY CHAIN,Agri_Process
+The Netherlands,Location,Origin_Of,audit system,Agri_Method
+"Smart contracts, provenance tracking or traceability, and finance innovation",Technology,Helps_In,farmers,Person
+block chain,Technology,Used_For,agri-SC context,Agri_Process
+food chain transparency,Agri_Process,Helps_In,adoption of blockchain technology,Technology
+Canada,Location,Origin_Of,studies conducted on blockchain adoption,Agri_Method
+China,Location,Origin_Of,studies conducted on blockchain adoption,Agri_Method
+India,Location,Origin_Of,studies conducted on blockchain adoption,Agri_Method
+The Netherlands and Saudi Arabia,Location,Origin_Of,empirical evidence,Agri_Method
+BCT,Technology,Used_For,agri-SC,Agri_Process
+BCT,Technology,Used_For,management of the agri-SC,Agri_Process
+blockchain technology,Technology,Helps_In,economic gains,Other
+blockchain technology,Technology,Helps_In,reduces environmental impacts,Agri_Process
+blockchain technology,Technology,Used_For,implementation of data-driven innovations,Agri_Process
+blockchain technologies,Technology,Used_For,improve the management of food-systems related services,Agri_Process
+ISM-DEMATEL technique,Agri_Method,Used_For,propose a driver and dependent factor framework,Agri_Process
+The Netherlands,Location,Origin_Of,blockchain implementation,Agri_Process
+India,Location,Origin_Of,blockchain implementation,Agri_Process
+USA (Oregon),Location,Origin_Of,blockchain implementation,Agri_Process
+Saudi Arabia,Location,Origin_Of,blockchain implementation,Agri_Process
+BCT migration,Agri_Method,Used_For,agri-SC,Agri_Process
+ISM-DEMATEL methodology,Agri_Method,Used_For,evaluate opinion before migrating to BCT,Agri_Process
+blockchain technology,Technology,Used_For,agricultural supply chain system,Agri_Process
+A hybrid model,ML_Model,Used_For,selecting a sustainable supply chain for agri-produce in India,Agri_Process
+Blockchain technology,Technology,Used_For,agri-food value chain management,Agri_Process
+Nano-food packaging,Technology,Used_For,food safety regulations,Policy
+"Smart sensing, communication, and control",Technology,Used_For,perishable food supply chain,Agri_Process
+COVID-19 pandemic,Natural_Disaster,Caused_By,Impact on perishable food supply chain management,Agri_Process
+food wastage,Agri_Waste,Caused_By,perishable food supply chain,Agri_Process
+food wastage,Agri_Waste,Caused_By,Optimal pricing strategy,Agri_Method
+Generation of food waste,Agri_Waste,Caused_By,hospitality and food retail and wholesale sectors,Organization
+Block chain ready manufacturing supply chain,Technology,Used_For,distributed ledger,Technology
+S. K. Sun et al.,Citation,Includes,Impacts of food wastage on water resources and environment in China,Agri_Waste
+"X. Chen, S. Wu, X. Wang, and D. Li",Citation,Includes,Optimal pricing strategy for the perishable food supply chain,Agri_Method
+"A. Chalak, C. Abou-Daher, and M. G. Abiad",Citation,Includes,Generation of food waste in the hospitality and food retail and wholesale sectors,Agri_Waste
+A. S. Abeyratne and R. P. Monfrared,Citation,Includes,Block chain ready manufacturing supply chain using distributed ledger,Technology
+A. Hoffman and R. Munsterman,Person,Includes,agriculture blockchain trade,Agri_Process
+"C. Zhang, L. Di, L. Lin, and L. Guo",Person,Includes,annual crop planting in the US corn belt,Agri_Process
+R. Iqbal and T. A. Butt,Person,Includes,Safe farming as a service of blockchain-based supply chain management,Agri_Method
+"L. Ge, C. Brewster, J. Spek, A. Smeenk, J. Top, and F. van Diepen",Person,Includes,Blockchain for agriculture and food,Agri_Method
+G. Sylvester,Person,Includes,Blockchain for Agriculture,Agri_Method
+P. Kang and N. Indra-Payoong,Person,Includes,A framework of blockchain smart contract in fair trade agriculture,Agri_Method
+G. Bagwasi and C. C. Raja,Person,Includes,Employment of blockchain technology in agriculture and food sector,Agri_Method
+USA Facts,Organization,Includes,Federal farm subsidies,Policy
+M. Gebet,Person,Includes,Application of blockchain technology in crowdfunding,Agri_Method
+D. Okorafor,Person,Includes,EthicHUb review: Crowdlending platform for farmers and agricultural communities,Agri_Method
+blockchain technology,Technology,Used_For,documenting land users’ rights,Agri_Process
+blockchain technology,Technology,Used_For,animal production and health sector,Agri_Process
+blockchain technology,Technology,Used_For,incentivizing efficient use of rural wastes,Agri_Process
+blockchain technology,Technology,Used_For,modern logistics and supply chain management,Agri_Process
+blockchain technology,Technology,Used_For,Managing disruptions and risks amidst COVID-19 outbreaks,Event
+blockchain technology,Technology,Used_For,developing resilient food supply chains,Agri_Process
+blockchain technology,Technology,Used_For,sustainable supply chain,Agri_Process
+blockchain technology,Technology,Used_For,supply chain,Agri_Process
+blockchain technology,Technology,Used_For,business supply chains,Agri_Process
+blockchain technology,Technology,Used_For,digitalization of supply chain,Agri_Process
+blockchain technology,Technology,Used_For,health-care industry,Agri_Process
+M. Sharma and S. Joshi,Person,Citation,"J. Glob. Operations Strategic Sourcing, vol. 14, pp. 134–169, 2021, doi:10.1108/JGOSS-06-2020-0026",Citation
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Coreference_Of,Downloaded,Event
+Dr B C Roy Engineering College,Organization,Used_For,Authorized licensed use,Policy
+Blockchain technology,Technology,Used_For,Agriculture supply chain,Agri_Process
+SHARMA et al.,Citation,Includes,Blockchain technology adoption,Agri_Method
+"A. Poduval, M. S. Ayyagari, M. Malinda, V . KEK, A. Kumar, and J. Kandasamy",Citation,Includes,Repurposing an existing manufacturing plant,Agri_Process
+"V . S. Yadav, A. R. Singh, R. D. Raut, and U. H. Govindarajan",Citation,Includes,Blockchain technology adoption barriers in the Indian agricultural supply chain,Agri_Process
+G. Balci and E. Surucu-Balci,Citation,Includes,Blockchain adoption in the maritime supply chain,Agri_Process
+"V . Shardeo, A. Patil, and J. Madaan",Citation,Includes,Blockchain technology adoption in freight transportation,Agri_Process
+"N. P. Rana, Y . K. Dwivedi, and D. L. Hughes",Citation,Includes,Challenges for blockchain adoption within the Indian public sector,Agri_Process
+"Y . Xu, H. Y . Chong, and M. Chi",Citation,Includes,Modelling the blockchain adoption barriers in the AEC industry,Agri_Process
+M. Sharma and R. Sehrawat,Citation,Includes,Quantifying SWOT analysis for cloud adoption,Agri_Method
+A. Kumar and G. Dixit,Citation,Includes,Barriers affecting the implementation of e-waste management practices in India,Agri_Process
+M. Sharma and R. Sehrawat,Citation,Includes,A hybrid multi-criteria decision-making method for cloud adoption,Agri_Method
+cloud adoption,Technology,Used_For,healthcare sector,Other
+Industry 4.0 IoT enablers,Technology,Used_For,integrated PCA-ISM-DEMATEL approach,Agri_Method
+Industry 4.0 adoption,Technology,Used_For,sustainability in multi-tier manufacturing supply chain,Agri_Process
+blockchain,Technology,Used_For,hospitality and tourism sectors,Other
+Blockchain for 5G-enabled IoT,Technology,Used_For,industrial automation,Agri_Process
+eFarm,Technology,Used_For,observing agricultural land systems,Agri_Process
+Multiplatform application,Technology,Used_For,precision irrigation scheduling in strawberries,Agri_Process
+Blockchain,Technology,Used_For,accounting governance,Other
+Blockchain,Technology,Used_For,the database engine in the accounting system,Other
+audit,Other,Used_For,blockchain,Technology
+blockchain,Technology,Used_For,food traceability analysis,Agri_Process
+blockchain,Technology,Used_For,food supply information security,Agri_Process
+blockchain,Technology,Used_For,precision irrigation,Agri_Process
+blockchain,Technology,Used_For,ICT e-agriculture,Agri_Process
+blockchain,Technology,Used_For,Supply chain management,Agri_Process
+A. M. Rozario and C. Thomas,Citation,Includes,Reengineering the audit with blockchain and smart contracts,Agri_Method
+"H. Yuan, X. Chen, J. Wang, J. Yuan, H. Yan, and W. Susilo",Citation,Includes,Blockchain-based public auditing and secure deduplication with fair arbitration,Agri_Method
+"J. F. Galvez, J. C. Mejuto, and J. Simal-Gandara",Citation,Includes,Future challenges on the use of blockchain for food traceability analysis,Agri_Method
+F. Yiannas,Citation,Includes,A new era of food transparency powered by blockchain,Agri_Method
+U. Bodkhe et al.,Citation,Includes,Blockchain for industry 4.0: A comprehensive review,Agri_Method
+blockchain,Technology,Used_For,Accelerating bitcoin’s transaction processing,Agri_Process
+blockchain,Technology,Used_For,Digital and data-driven agriculture,Agri_Process
+blockchain,Technology,Used_For,Powering and empowering the poor in developing countries,Agri_Process
+blockchain,Technology,Used_For,improve post COVID-19 supply chains,Agri_Process
+blockchain,Technology,Used_For,A secure ﬁsh farm platform,Agri_Process
+blockchain,Technology,Used_For,Meeting changing customer requirements in food and agriculture,Agri_Process
+blockchain,Technology,Used_For,"Electronic agriculture, blockchain and digital agricultural democratization",Agri_Process
+blockchain,Technology,Used_For,sustainable agriculture supply chain,Agri_Process
+"Panchal, and V . V . Gedam",Citation,Coreference_Of,Antecedents for blockchain technology-enabled sustainable agriculture supply chain,Agri_Method
+Ann. Oper. Res.,Citation,Coreference_Of,Antecedents for blockchain technology-enabled sustainable agriculture supply chain,Agri_Method
+"April 22,2025 at 06:37:00 UTC",Date_and_Time,Coreference_Of,Downloaded,Event
+late blight, Disease, Caused_By, Phytophthora infestans, Organism
+Early blight, Disease, Caused_By, Alternaria solani, Organism

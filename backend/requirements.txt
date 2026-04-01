@@ -1,0 +1,16 @@
+fastapi==0.103.2
+uvicorn[standard]==0.29.0
+mysql-connector-python==8.3.0
+bcrypt==4.1.3
+PyJWT==2.8.0
+python-dotenv==1.0.1
+pydantic==1.10.21
+email-validator==2.1.1
+# ── NEW: AI Pipeline ──────────────────────────────
+sentence-transformers   # Embeddings (all-MiniLM-L6-v2)
+chromadb                # Vector database
+requests                # HTTP calls to Groq API
+ 
+# ── Optional: Real web scraping (uncomment when ready) ──
+# httpx
+# beautifulsoup4
