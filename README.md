@@ -8,7 +8,7 @@ It provides:
 🌐 Automatic web-based knowledge updates
 📊 Knowledge Graph (Neo4j) powered insights
 ⚡ Fast similarity search using FAISS
-🌦️ Weather-based crop risk alerts
+🌦️ Weather-based crop  risk alerts
 
 
 🚀 Features
